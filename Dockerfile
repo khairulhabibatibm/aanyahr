@@ -12,8 +12,7 @@ WORKDIR /app-ui
 COPY . .
 
 # Build the project and copy the files
-RUN npm run ng build -- --deploy-url=/ --prod
-
+RUN npm run ng build -- --deploy-url=/
 
 FROM nginxinc/nginx-unprivileged
 
