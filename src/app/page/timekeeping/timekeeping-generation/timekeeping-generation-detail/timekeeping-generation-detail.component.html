@@ -1,0 +1,320 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Timekeeping</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/timekeeping/timekeeping-generation-view">Timekeeping
+          Generation</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="timekeepingForm">
+            <aw-wizard>
+              <aw-wizard-step stepTitle="Details" [awCompletedStep]="complete">
+                <hr>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Payroll Type</label>
+                      <ng-select formControlName="selectedPayrollType" [items]="payrolltype" name="Payroll Type"
+                        bindLabel="description" bindValue="id" placeholder="Select Payroll Type"
+                        (change)="changePayrollType()">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errPayrollType">Payroll Type is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4" *ngIf="isCutoff">
+                    <div class="form-group">
+                      <label class="control-label">Payroll Cutoff</label>
+                      <ng-select formControlName="selectedCutoff" [items]="cutoffList" name="Payroll Type"
+                        bindLabel="description" bindValue="id" placeholder="Select Payroll Type"
+                        (change)="changePayrollType()">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errCutoff">Payroll Cutoff is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Month</label>
+                      <ng-select formControlName="selectedMonth" [items]="monthList" name="Payroll Month"
+                        bindLabel="description" bindValue="id" placeholder="Select Month"
+                        (change)="changePayrollType()">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errMonth">Month is needed!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Date From</label>
+                      <div class="input-group">
+                        <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateFrom"
+                          (click)="df.toggle()" ngbDatepicker #df="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="df.toggle()">
+                            <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <p class="text-danger mt-1" *ngIf="errdateFrom">Date From is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Date To</label>
+                      <div class="input-group">
+                        <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateTo"
+                          (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                            <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <p class="text-danger mt-1" *ngIf="errdateTo">Date To is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Category</label>
+                      <ng-select formControlName="selectedCategory" [items]="category" name="Category"
+                        bindLabel="category_name" bindValue="category_id" placeholder="Select Category">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errCategory">Category is needed!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Branch</label>
+                      <ng-select formControlName="selectedBranch" [items]="branch" name="Department"
+                        bindLabel="branch_name" bindValue="branch_id" placeholder="Select Department">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errBranch">Branch is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Confidential</label>
+                      <ng-select formControlName="selectedConfidential" [items]="confidential" name="Confidential"
+                        bindLabel="description" bindValue="id" placeholder="Select Confidential">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errConfidential">Confidential is needed!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-primary btn-icon-text" *ngIf="!isView" (click)="submitHeader()">
+                    <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+                  </button>
+                  <button class="btn btn-primary" *ngIf="isView" type="button" awNextStep>Continue</button>
+                </div>
+              </aw-wizard-step>
+              <aw-wizard-step stepTitle="Timekeeping Generation" [awCompletedStep]="complete">
+                <hr>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="text-right">
+                      <button class="btn btn-primary" *ngIf="isGenerate" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                      </button>
+                      <button type="button" *ngIf="!isGenerate" class="btn btn-primary btn-icon-text"
+                        (click)="generate()">
+                        <i data-feather="clock" appFeatherIcon class="btn-icon-prepend"></i>
+                        Generate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <table id="tkList" style="width: 100%;" [dtTrigger]="dtTriggerTkList" datatable
+                        [dtOptions]="dtOptions['tkList']" class="table">
+                        <thead>
+                          <tr>
+                            <th>Timekeeping Code</th>
+                            <th>Date From</th>
+                            <th>Date To</th>
+                            <th>Created By</th>
+                            <th>Date Created</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                  <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+                </div>
+              </aw-wizard-step>
+              <aw-wizard-step stepTitle="Final Timekeeping" [awCompletedStep]="complete">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="table-responsive">
+                          <table id="tkFinal" [dtTrigger]="dtTriggerFinal" datatable [dtOptions]="dtOptions['tkFinal']"
+                            class="table">
+                            <thead>
+                              <tr>
+                                <th>EMPLOYEE CODE</th>
+                                <th>EMPLOYEE</th>
+                                <th>DATE</th>
+                                <th>RESTDAY</th>
+                                <th>SCHEDULE IN</th>
+                                <th>SCHEDULE OUT</th>
+                                <th>TIME IN</th>
+                                <th>TIME OUT</th>
+                                <th>RG</th>
+                                <th>TARDY</th>
+                                <th>UT</th>
+                                <th>ABSNT</th>
+                                <th>LWOP</th>
+                                <th>VL</th>
+                                <th>SL</th>
+                                <th>OTLV</th>
+                                <th>ND</th>
+                                <th>RGOT</th>
+                                <th>RGOTND</th>
+                                <th>LHOT</th>
+                                <th>LHOTND</th>
+                                <th>LHOT>8</th>
+                                <th>LHOTND>8</th>
+                                <th>LHRD</th>
+                                <th>LHRDND</th>
+                                <th>LHRD>8</th>
+                                <th>LHRDND>8</th>
+                                <th>SHOT</th>
+                                <th>SHOTND</th>
+                                <th>SHOT>8</th>
+                                <th>SHOTND>8</th>
+                                <th>SHRD</th>
+                                <th>SHRDND</th>
+                                <th>SHRD>8</th>
+                                <th>SHRDND>8</th>
+                                <th>RDOT</th>
+                                <th>RDOTND</th>
+                                <th>RDOT>8</th>
+                                <th>RDOTND>8</th>
+                                <th>DHOT</th>
+                                <th>DHOTND</th>
+                                <th>DHOT>8</th>
+                                <th>DHOTND>8</th>
+                                <th>DHRD</th>
+                                <th>DHRDND</th>
+                                <th>DHRD>8</th>
+                                <th>DHRDND>8</th>
+                                <th>REMARKS</th>
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                </div>
+              </aw-wizard-step>
+            </aw-wizard>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #generatedModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Timekeeping Detail</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table id="modalTable" datatable [dtOptions]="dtOptions['generated']" class="table">
+            <thead>
+              <tr>
+                <th>EMPLOYEE CODE</th>
+                <th>EMPLOYEE</th>
+                <th>DATE</th>
+                <th>RESTDAY</th>
+                <th>SCHEDULE IN</th>
+                <th>SCHEDULE OUT</th>
+                <th>TIME IN</th>
+                <th>TIME OUT</th>
+                <th>RG</th>
+                <th>TARDY</th>
+                <th>UT</th>
+                <th>ABSNT</th>
+                <th>LWOP</th>
+                <th>VL</th>
+                <th>SL</th>
+                <th>OTLV</th>
+                <th>ND</th>
+                <th>RGOT</th>
+                <th>RGOTND</th>
+                <th>LHOT</th>
+                <th>LHOTND</th>
+                <th>LHOT>8</th>
+                <th>LHOTND>8</th>
+                <th>LHRD</th>
+                <th>LHRDND</th>
+                <th>LHRD>8</th>
+                <th>LHRDND>8</th>
+                <th>SHOT</th>
+                <th>SHOTND</th>
+                <th>SHOT>8</th>
+                <th>SHOTND>8</th>
+                <th>SHRD</th>
+                <th>SHRDND</th>
+                <th>SHRD>8</th>
+                <th>SHRDND>8</th>
+                <th>RDOT</th>
+                <th>RDOTND</th>
+                <th>RDOT>8</th>
+                <th>RDOTND>8</th>
+                <th>DHOT</th>
+                <th>DHOTND</th>
+                <th>DHOT>8</th>
+                <th>DHOTND>8</th>
+                <th>DHRD</th>
+                <th>DHRDND</th>
+                <th>DHRD>8</th>
+                <th>DHRDND>8</th>
+                <th>REMARKS</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="saveTimekeeping()">Save changes</button>
+  </div>
+</ng-template>

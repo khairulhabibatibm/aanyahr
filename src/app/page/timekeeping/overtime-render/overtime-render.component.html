@@ -1,0 +1,137 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Timekeeping</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Overtime Render</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Overtime Render</h6>
+              </div>
+            </div>
+            <hr>
+          </div>
+          <form [formGroup]="renderForm">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Date From</label>
+                  <div class="input-group">
+                    <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateFrom"
+                      value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                        <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Date To</label>
+                  <div class="input-group">
+                    <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateTo"
+                      (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                        <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Employee</label>
+                  <ng-select [items]="employeeList" name="Employee" bindLabel="display_name" bindValue="encrypt_employee_id"
+                    placeholder="Select Employee" formControlName="selectedEmployee">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errEmployee">Please select employee!</p>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-right">
+                <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
+                <button type="button" *ngIf="!isSearch" class="btn btn-primary btn-icon-text" (click)="search()">
+                  <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i>
+                  Search
+                </button> &nbsp;
+                <button type="button" class="btn btn-primary btn-icon-text" (click)="submit()">
+                  <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i>
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="dataTableExample" class="table">
+                  <thead>
+                    <tr>
+                      <th>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" (change)="checkAll($event)"
+                            class="custom-control-input" id="check-all">
+                          <label class="custom-control-label" for="check-all"></label>
+                        </div>
+                      </th>
+                      <th>Employee Code</th>
+                      <th>Employee Name</th>
+                      <th>Schedule In</th>
+                      <th>Schedule Out</th>
+                      <th>Time In</th>
+                      <th>Time Out</th>
+                      <th>Filed OT In</th>
+                      <th>Filed OT Out</th>
+                      <th>Final In</th>
+                      <th>Final Out</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of renderList; let i = index">
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" [checked]="isChecked" (change)="checkTrans(i, $event)" class="custom-control-input"
+                            id="{{x.overtime_code}}">
+                          <label class="custom-control-label" for="{{x.overtime_code}}"></label>
+                        </div>
+                      </td>
+                      <td>{{x.employee_code}}</td>
+                      <td>{{x.display_name}}</td>
+                      <td>{{x.schedule_in}}</td>
+                      <td>{{x.schedule_out}}</td>
+                      <td>{{x.time_in}}</td>
+                      <td>{{x.time_out}}</td>
+                      <td>{{x.file_ot_in}}</td>
+                      <td>{{x.file_ot_out}}</td>
+                      <td>{{x.final_in}}</td>
+                      <td>{{x.final_out}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

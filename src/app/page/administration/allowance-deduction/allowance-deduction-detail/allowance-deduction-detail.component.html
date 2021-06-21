@@ -1,0 +1,107 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item"><a
+          routerLink="/layout/administration/allowance-deduction-view">Allowance/Deduction</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>Allowance/Deduction</h6>
+          </div>
+          <form [formGroup]="adForm">
+            <div class="row">
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <input type="text" formControlName="name" class="form-control" placeholder="Name">
+                  <p class="text-danger mt-1" *ngIf="errName">Name is needed!</p>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="control-label">Type</label>
+                  <ng-select [items]="moduleType" bindLabel="description" bindValue="id" placeholder="Select Type"
+                    formControlName="selectedModuleType" (ngModelChange)="modelChangeFn($event)">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errType">Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" formControlName="active" class="form-check-input">
+                        <i class="input-frame"></i>
+                        Active?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group" *ngIf="isType">
+                  <label class="control-label">Minimum Hour</label>
+                  <input type="text" formControlName="minimumHour" class="form-control" placeholder="Minimum Hour">
+                  <p class="text-danger mt-1" *ngIf="errMinimum">Minimum hour is needed!</p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group" *ngIf="isType">
+                  <label class="control-label">Maximum Hour</label>
+                  <input type="text" formControlName="maximumHour" class="form-control" placeholder="Minimum Hour">
+                  <p class="text-danger mt-1" *ngIf="errMaximum">Maximum hour is needed!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input formControlName="taxable" type="checkbox" class="form-check-input">
+                        <i class="input-frame"></i>
+                        Taxable?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+            </button>
+            <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+            html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+            cancelButtonAriaLabel: 'Thumbs down'
+          }" class="btn btn-primary">
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,212 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb" *ngIf="!isDashboard">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Filing</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/filing/offset-view">Offset</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+
+    <div class="col-md-5 grid-margin">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title">Offset</h6>
+        </div>
+        <form [formGroup]="offsetForm">
+          <div class="card-body">
+            <div class="form-group">
+              <label class="control-label">Reason</label>
+              <input type="text" formControlName="reason" class="form-control" placeholder="Reason">
+              <p class="text-danger mt-1" *ngIf="errReason">Reason is needed!</p>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">Offset Date</label>
+                  <div class="input-group">
+                    <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="offsetDate"
+                      value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                        <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">Offset Minutes</label>
+                  <input type="text" formControlName="offsetHour" class="form-control" placeholder="Reason">
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="form-group">
+              <input #file multiple placeholder="Choose file" (change)="uploadFile($event)" type="file"
+                class="file-upload-default" id="fileUploadInputExample">
+              <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+                <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Files">
+                <span class="input-group-append">
+                  <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                </span>
+              </div>
+            </div>
+            <div class="container">
+              <div class="row icons-list">
+                <div class="col-sm-6" *ngFor="let x of documents; let i = index">
+                  <div class="w-100">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="text-body mb-2"><a href="{{x.url}}" target="_blank"><i
+                            class="{{x.file_class}}"></i>{{x.file_name}}</a></h6>
+                      <p class="text-muted tx-12"><i class="mdi mdi-close" (click)="deleteDocument(i)"></i></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card-footer" *ngIf="!isView">
+          <ul class="nav justify-content-end">
+            <button *ngIf="isCancel" class="btn btn-warning btn-icon-text" (click)="cancel()">
+              <i data-feather="rotate-cw" appFeatherIcon class="btn-icon-prepend"></i> Cancel
+            </button> &nbsp;
+            <button *ngIf="isSubmit" class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7 grid-margin">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title">Overtime List</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table id="dataTableExample" class="table">
+              <thead>
+                <tr>
+                  <th>Overtime Code</th>
+                  <th>Overtime Min(s)</th>
+                  <th>Offset Used Min(s)</th>
+                  <th>Offset Min(s)</th>
+                  <th>Balance Min(s)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of otList; let i = index">
+                  <td>{{x.overtime_code}}</td>
+                  <td>{{x.overtime_hour}}</td>
+                  <td>{{x.offset_used}}</td>
+                  <td>{{x.offset_hour}}</td>
+                  <td>{{x.balance_hour}}</td>
+                  <td>
+                    <button type="button" (click)="editOvertime(x.overtime_id)" title="Edit"
+                      class="btn btn-sm btn-primary btn-icon">
+                      <i class="feather icon-edit-2"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #overtimeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Overtime Detail</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="overtimeForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Overtime Code</label>
+            <input type="text" formControlName="overtimeCode" readonly class="form-control" placeholder="Overtime Code">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Balance</label>
+            <input type="text" formControlName="balance" readonly class="form-control" placeholder="Balance">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Date From</label>
+            <input type="text" formControlName="dateFrom" readonly class="form-control" placeholder="Date From">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Date To</label>
+            <input type="text" formControlName="dateTo" readonly class="form-control" placeholder="Date To">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Used Minutes</label>
+            <input type="text" formControlName="offsetHour" readonly class="form-control" placeholder="Used Minutes">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Offset Minutes</label>
+            <input type="number" formControlName="offsetUsed" (keyup)="setOffset()" class="form-control"
+              placeholder="Offset Minutes">
+            <p class="text-danger mt-1" *ngIf="errOffsetHour">{{ errOffsetText }}</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="updateOvertime()">Save changes</button>
+  </div>
+</ng-template>
+
+<ng-template #cancelModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Cancellation</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="control-label">Reason</label>
+          <textarea type="text" rows="3" [(ngModel)]="remarks" class="form-control" placeholder="Reason"></textarea>
+          <p class="text-danger mt-1" *ngIf="errCancelReason">Reason is needed!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-warning" (click)="cancelTransaction()">Cancel</button>
+  </div>
+</ng-template>

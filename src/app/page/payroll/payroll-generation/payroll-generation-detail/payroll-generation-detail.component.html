@@ -1,0 +1,1060 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Payroll</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/payroll/payroll-generation-view">Payroll Generation</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <aw-wizard>
+            <aw-wizard-step stepTitle="Details" [awCompletedStep]="complete">
+              <hr>
+              <form [formGroup]="headerForm">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Timekeeping Code</label>
+                      <ng-select formControlName="timekeepingID" [items]="tkList" (change)="selectTK($event)"
+                        name="Payroll Type" bindLabel="timekeeping_header_code" bindValue="timekeeping_header_id"
+                        placeholder="Select Timekeeping">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errTimekeeping">Timekeeping is needed!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Payroll Type</label>
+                      <input type="text" formControlName="payrollType" readonly style="background-color: white;"
+                        class="form-control" placeholder="Payroll Type">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Date From</label>
+                      <input type="text" formControlName="dateFrom" readonly style="background-color: white;"
+                        class="form-control" placeholder="Date From">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Date To</label>
+                      <input type="text" formControlName="dateTo" readonly style="background-color: white;"
+                        class="form-control" placeholder="Date To">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Category</label>
+                      <input type="text" formControlName="category" readonly style="background-color: white;"
+                        class="form-control" placeholder="Category">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Branch</label>
+                      <input type="text" formControlName="branch" readonly style="background-color: white;"
+                        class="form-control" placeholder="Branch">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Confidential</label>
+                      <input type="text" formControlName="confidential" readonly style="background-color: white;"
+                        class="form-control" placeholder="Confidential">
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-primary btn-icon-text" *ngIf="!isView" (click)="submitHeader()">
+                  <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+                </button>
+                <button class="btn btn-primary" *ngIf="isView" type="button" awNextStep>Continue</button>
+              </div>
+            </aw-wizard-step>
+            <aw-wizard-step stepTitle="One Time Adjustment" [awCompletedStep]="complete">
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="text-right">
+                    <button type="button" *ngIf="!isGenerate" class="btn btn-primary btn-icon-text"
+                      (click)="addAdjustment()">
+                      <i data-feather="clock" appFeatherIcon class="btn-icon-prepend"></i>
+                      Add Adjustment
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table id="tkList" style="width: 100%;" class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Employee Code</th>
+                          <th>Employee</th>
+                          <th>Type</th>
+                          <th>Adjustment Name</th>
+                          <th>Amount</th>
+                          <th>Taxable</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let x of adjHList; let i = index">
+                          <td>{{x.employee_code}}</td>
+                          <td>{{x.display_name}}</td>
+                          <td>{{x.adjustment_type}}</td>
+                          <td>{{x.adjustment_name}}</td>
+                          <td>{{x.amount}}</td>
+                          <td>{{x.taxable}}</td>
+                          <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" [(ngModel)]="x.active" (change)="checkTrans(i, $event)"
+                                class="custom-control-input" id="{{x.payroll_adjustment_id}}">
+                              <label class="custom-control-label" for="{{x.payroll_adjustment_id}}"></label>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+              </div>
+            </aw-wizard-step>
+            <aw-wizard-step stepTitle="Payroll Generation" [awCompletedStep]="complete">
+              <hr>
+              <form [formGroup]="payrollForm">
+                <div class="row">
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="control-label">&nbsp;</label>
+                      <div class="custom-control custom-switch">
+                        <input formControlName="includeTax" type="checkbox" class="custom-control-input" id="cktax">
+                        <label class="custom-control-label" for="cktax">Include Tax</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="control-label">&nbsp;</label>
+                      <div class="custom-control custom-switch">
+                        <input formControlName="includeSSS" type="checkbox" class="custom-control-input" id="cksss">
+                        <label class="custom-control-label" for="cksss">Include SSS</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="control-label">&nbsp;</label>
+                      <div class="custom-control custom-switch">
+                        <input formControlName="includePagibig" type="checkbox" class="custom-control-input"
+                          id="ckpagibig">
+                        <label class="custom-control-label" for="ckpagibig">Include Pagibig</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="control-label">&nbsp;</label>
+                      <div class="custom-control custom-switch">
+                        <input formControlName="includePhilhealth" type="checkbox" class="custom-control-input"
+                          id="ckphilhealth">
+                        <label class="custom-control-label" for="ckphilhealth">Include Philhealth</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="text-right">
+                      <button class="btn btn-primary" *ngIf="isGenerate" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                      </button>
+                      <button type="button" *ngIf="!isGenerate" class="btn btn-primary btn-icon-text"
+                        (click)="generate()">
+                        <i data-feather="clock" appFeatherIcon class="btn-icon-prepend"></i>
+                        Generate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Category</label>
+                      <ng-select formControlName="category" [items]="category" name="Category" bindLabel="category_name"
+                        bindValue="category_id" placeholder="Select Category">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errCategory">Category is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Branch</label>
+                      <ng-select formControlName="branch" [items]="branch" name="Branch" bindLabel="branch_name"
+                        bindValue="branch_id" placeholder="Select Department">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errBranch">Branch is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="control-label">Confidential</label>
+                      <ng-select formControlName="confidential" [items]="confidential" name="Confidential"
+                        bindLabel="description" bindValue="id" placeholder="Select Confidential">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errConfidential">Confidential is needed!</p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table style="width: 100%;" class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Payroll Code</th>
+                          <th>Date From</th>
+                          <th>Date To</th>
+                          <th>Status</th>
+                          <th>Created By</th>
+                          <th>Date Created</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let x of payHList; let i = index">
+                          <td>{{x.payroll_code}}</td>
+                          <td>{{x.date_from | date: 'MM/dd/yyyy'}}</td>
+                          <td>{{x.date_to | date: 'MM/dd/yyyy'}}</td>
+                          <td>{{x.status}}</td>
+                          <td>{{x.display_name}}</td>
+                          <td>{{x.date_created | date: 'MM/dd/yyyy'}}</td>
+                          <td><button (click)="view(x.payroll_id)" type="button"
+                              class="btn btn-sm btn-primary btn-icon"><i class="feather icon-search"></i></button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+              </div>
+            </aw-wizard-step>
+            <aw-wizard-step stepTitle="Post Payroll" [awCompletedStep]="complete">
+              <hr>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label">Payroll Code</label>
+                    <ng-select [items]="payList" [(ngModel)]="selectedCode" (ngModelChange)="loadList()"
+                      name="Payroll Type" bindLabel="payroll_code" bindValue="payroll_id"
+                      placeholder="Select Payroll Code">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="form-group">
+                      <div class="row">
+                        <button class="btn btn-primary" *ngIf="isPost" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Loading...
+                        </button>
+                        <button *ngIf="!isPost" (click)="postPayroll()" class="btn btn-primary btn-icon-text">
+                          <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Post
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <p class="text-danger mt-1" *ngIf="errPosting">No items selected!</p>
+                    <table id="postingTable" datatable [dtTrigger]="dtTriggerPosting"
+                      [dtOptions]="dtOptions['postingView']" class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" checked (change)="checkAll($event)" class="custom-control-input"
+                                id="check-all">
+                              <label class="custom-control-label" for="check-all"></label>
+                            </div>
+                          </th>
+                          <th>Paydate</th>
+                          <th>Paycode</th>
+                          <th>Employee ID</th>
+                          <th>Lastname</th>
+                          <th>Firstname</th>
+                          <th>Filestatus</th>
+                          <th>Taxstatus</th>
+                          <th>DAILY RATE</th>
+                          <th>MONTHLY RATE</th>
+                          <th>BASIC SALARY</th>
+                          <th>MISC AMOUNT</th>
+                          <th>LEAVEAMOUNT</th>
+                          <th>OVERTIME(REG)</th>
+                          <th>OVERTIME(HOL)</th>
+                          <th>OTHER TX INCOME</th>
+                          <th>ADJUSTMENTS</th>
+                          <th>GROSS INCOME</th>
+                          <th>WITHOLDING TAX</th>
+                          <th>NET SALARY AFTER TAX</th>
+                          <th>EMPLOYEE SSS</th>
+                          <th>EMPLOYEE MCR</th>
+                          <th>EMPLOYEE PAG-IBIG</th>
+                          <th>OTHER NTX INCOME</th>
+                          <th>LOAN PAYMENTS</th>
+                          <th>DEDUCTIONS</th>
+                          <th>NET SALARY</th>
+                          <th>EMPLOYER SSS</th>
+                          <th>EMPLOYER MCR</th>
+                          <th>EMPLOYER EC</th>
+                          <th>EMPLOYER PAG-IBIG</th>
+                          <th>PAYROLL COST</th>
+                          <th>YTD GROSS</th>
+                          <th>YTD WITHOLDING</th>
+                          <th>YTD SSS</th>
+                          <th>YTD MCR</th>
+                          <th>YTD PAG-IBIG</th>
+                          <th>YTD BON/13TH NT</th>
+                          <th>YTD BON/13TH TX</th>
+                          <th>PAYMENT TYPE</th>
+                          <th>BANK ACCT#</th>
+                          <th>BANK NAME</th>
+                          <th>DATE EMPLOYED</th>
+                          <th>DATE TERMINATED</th>
+                          <th>COST CENTER</th>
+                          <th>CURRENCY</th>
+                          <th>EXCHANGE RATE</th>
+                          <th>PAYMENT FREQ</th>
+                          <th>MTD GROSS</th>
+                          <th>MTD BASIC</th>
+                          <th>MTD SSS EMPLOYEE</th>
+                          <th>MTD MCR EMPLOYEE</th>
+                          <th>MTD PAG-IBIG EMPLOYEE</th>
+                          <th>MTD SSS EMPLOYER</th>
+                          <th>MTD MCR EMPLOYER</th>
+                          <th>MTD EC EMPLOYER</th>
+                          <th>MTD PAG-IBIG EMPLOYER</th>
+                          <th>MTD WH TAX</th>
+                          <th>MONTHLY BASIC</th>
+                          <th>MONTHLY ALLOW</th>
+                          <th>MTD NTX</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+              </div>
+            </aw-wizard-step>
+            <aw-wizard-step stepTitle="Posted Payroll" [awCompletedStep]="complete">
+              <hr>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table id="postedTable" datatable [dtTrigger]="dtTriggerPosted" [dtOptions]="dtOptions['postedView']"
+                      class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Paydate</th>
+                          <th>Paycode</th>
+                          <th>Employee ID</th>
+                          <th>Lastname</th>
+                          <th>Firstname</th>
+                          <th>Filestatus</th>
+                          <th>Taxstatus</th>
+                          <th>DAILY RATE</th>
+                          <th>MONTHLY RATE</th>
+                          <th>BASIC SALARY</th>
+                          <th>MISC AMOUNT</th>
+                          <th>LEAVEAMOUNT</th>
+                          <th>OVERTIME(REG)</th>
+                          <th>OVERTIME(HOL)</th>
+                          <th>OTHER TX INCOME</th>
+                          <th>ADJUSTMENTS</th>
+                          <th>GROSS INCOME</th>
+                          <th>WITHOLDING TAX</th>
+                          <th>NET SALARY AFTER TAX</th>
+                          <th>EMPLOYEE SSS</th>
+                          <th>EMPLOYEE MCR</th>
+                          <th>EMPLOYEE PAG-IBIG</th>
+                          <th>OTHER NTX INCOME</th>
+                          <th>LOAN PAYMENTS</th>
+                          <th>DEDUCTIONS</th>
+                          <th>NET SALARY</th>
+                          <th>EMPLOYER SSS</th>
+                          <th>EMPLOYER MCR</th>
+                          <th>EMPLOYER EC</th>
+                          <th>EMPLOYER PAG-IBIG</th>
+                          <th>PAYROLL COST</th>
+                          <th>YTD GROSS</th>
+                          <th>YTD WITHOLDING</th>
+                          <th>YTD SSS</th>
+                          <th>YTD MCR</th>
+                          <th>YTD PAG-IBIG</th>
+                          <th>YTD BON/13TH NT</th>
+                          <th>YTD BON/13TH TX</th>
+                          <th>PAYMENT TYPE</th>
+                          <th>BANK ACCT#</th>
+                          <th>BANK NAME</th>
+                          <th>DATE EMPLOYED</th>
+                          <th>DATE TERMINATED</th>
+                          <th>COST CENTER</th>
+                          <th>CURRENCY</th>
+                          <th>EXCHANGE RATE</th>
+                          <th>PAYMENT FREQ</th>
+                          <th>MTD GROSS</th>
+                          <th>MTD BASIC</th>
+                          <th>MTD SSS EMPLOYEE</th>
+                          <th>MTD MCR EMPLOYEE</th>
+                          <th>MTD PAG-IBIG EMPLOYEE</th>
+                          <th>MTD SSS EMPLOYER</th>
+                          <th>MTD MCR EMPLOYER</th>
+                          <th>MTD EC EMPLOYER</th>
+                          <th>MTD PAG-IBIG EMPLOYER</th>
+                          <th>MTD WH TAX</th>
+                          <th>MONTHLY BASIC</th>
+                          <th>MONTHLY ALLOW</th>
+                          <th>MTD NTX</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center mt-2">
+                <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+              </div>
+            </aw-wizard-step>
+          </aw-wizard>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #generatedModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Payroll Detail</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table id="modalTable" datatable [dtOptions]="dtOptions['modalView']" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Paydate</th>
+                <th>Paycode</th>
+                <th>Employee ID</th>
+                <th>Lastname</th>
+                <th>Firstname</th>
+                <th>Filestatus</th>
+                <th>Taxstatus</th>
+                <th>DAILY RATE</th>
+                <th>MONTHLY RATE</th>
+                <th>BASIC SALARY</th>
+                <th>MISC AMOUNT</th>
+                <th>LEAVEAMOUNT</th>
+                <th>OVERTIME(REG)</th>
+                <th>OVERTIME(HOL)</th>
+                <th>OTHER TX INCOME</th>
+                <th>ADJUSTMENTS</th>
+                <th>GROSS INCOME</th>
+                <th>WITHOLDING TAX</th>
+                <th>NET SALARY AFTER TAX</th>
+                <th>EMPLOYEE SSS</th>
+                <th>EMPLOYEE MCR</th>
+                <th>EMPLOYEE PAG-IBIG</th>
+                <th>OTHER NTX INCOME</th>
+                <th>LOAN PAYMENTS</th>
+                <th>DEDUCTIONS</th>
+                <th>NET SALARY</th>
+                <th>EMPLOYER SSS</th>
+                <th>EMPLOYER MCR</th>
+                <th>EMPLOYER EC</th>
+                <th>EMPLOYER PAG-IBIG</th>
+                <th>PAYROLL COST</th>
+                <th>YTD GROSS</th>
+                <th>YTD WITHOLDING</th>
+                <th>YTD SSS</th>
+                <th>YTD MCR</th>
+                <th>YTD PAG-IBIG</th>
+                <th>YTD BON/13TH NT</th>
+                <th>YTD BON/13TH TX</th>
+                <th>PAYMENT TYPE</th>
+                <th>BANK ACCT#</th>
+                <th>BANK NAME</th>
+                <th>DATE EMPLOYED</th>
+                <th>DATE TERMINATED</th>
+                <th>COST CENTER</th>
+                <th>CURRENCY</th>
+                <th>EXCHANGE RATE</th>
+                <th>PAYMENT FREQ</th>
+                <th>MTD GROSS</th>
+                <th>MTD BASIC</th>
+                <th>MTD SSS EMPLOYEE</th>
+                <th>MTD MCR EMPLOYEE</th>
+                <th>MTD PAG-IBIG EMPLOYEE</th>
+                <th>MTD SSS EMPLOYER</th>
+                <th>MTD MCR EMPLOYER</th>
+                <th>MTD EC EMPLOYER</th>
+                <th>MTD PAG-IBIG EMPLOYER</th>
+                <th>MTD WH TAX</th>
+                <th>MONTHLY BASIC</th>
+                <th>MONTHLY ALLOW</th>
+                <th>MTD NTX</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="savePayroll()">Save changes</button>
+  </div>
+</ng-template>
+
+<ng-template #adjustmentModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Adjustment Detail</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="adjustmentForm">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Adjustment Type</label>
+            <ng-select formControlName="adjustmentType" [items]="typeList" name="Adustment Type" bindLabel="description"
+              bindValue="id" placeholder="Select Adjustment Type">
+            </ng-select>
+            <p class="text-danger mt-1" *ngIf="errAdjustmentType">Adjustment Type is needed!</p>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="control-label">Adjustment</label>
+            <input formControlName="adjustment" type="text" class="form-control" placeholder="Adjustment">
+            <p class="text-danger mt-1" *ngIf="errAdjustment">Adjustment is needed!</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Amount</label>
+            <input formControlName="amount" type="number" class="form-control" placeholder="0">
+            <p class="text-danger mt-1" *ngIf="errAmount">Amount is needed!</p>
+          </div>
+        </div>
+        <div class="col-sm-1">
+          <div class="form-group">
+            <div class="form-group">
+              <label class="control-label">Taxable?</label>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input formControlName="taxable" type="checkbox" class="form-check-input">
+                  <i class="input-frame"></i>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Tag Type</label>
+            <ng-select formControlName="selectedTagType" [items]="tagType" (change)="onChange()" name="Tag Type"
+              bindLabel="description" bindValue="id" placeholder="Select Tag Type">
+            </ng-select>
+            <p class="text-danger mt-1" *ngIf="errTagType">Tag Type is needed!</p>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="control-label">Name</label>
+            <ng-select [items]="nameList" formControlName="selectedEmployee" name="Name" bindLabel="description"
+              bindValue="id" placeholder="Select Name">
+            </ng-select>
+            <p class="text-danger mt-1" *ngIf="errName">Name is needed!</p>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <div class="form-group">
+              <div class="row">
+                <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
+                <button type="button" *ngIf="!isSearch" (click)="search()" class="btn btn-primary btn-icon-text ">
+                  <i data-feather="corner-right-down" appFeatherIcon class="btn-icon-prepend"></i>
+                  Add
+                </button> &nbsp;
+                <button class="btn btn-primary btn-icon-text" (click)="submitAdjustment()">
+                  <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table id="modalTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th>EMPLOYEE CODE</th>
+                <th>EMPLOYEE</th>
+                <th>TYPE</th>
+                <th>AMOUNT</th>
+                <th>TAXABLE</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of adjList; let i = index">
+                <td>{{x.employee_code}}</td>
+                <td>{{x.display_name}}</td>
+                <td>{{x.adjustment_type}}</td>
+                <td>{{x.amount}}</td>
+                <td>{{x.taxable}}</td>
+                <td>
+                  <button type="button" title="Edit" (click)="deleteAdjustment(i)"
+                    class="btn btn-sm btn-danger btn-icon">
+                    <i class="feather icon-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #viewModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Payroll Detail</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="mini-stat clearfix bg-gross rounded">
+          <span class="mini-stat-icon"><i class="mdi mdi-cards"></i></span>
+          <div class="mini-stat-info">
+            <span>₱ {{hGross | number:'1.2-2'}}</span>
+            Basic Gross Pay
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="mini-stat clearfix bg-addition rounded">
+          <span class="mini-stat-icon"><i class="mdi mdi-trending-up"></i></span>
+          <div class="mini-stat-info">
+            <span>₱ {{hAddition | number:'1.2-2'}}</span>
+            Total Addition
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="mini-stat clearfix bg-deduction rounded">
+          <span class="mini-stat-icon"><i class="mdi mdi-trending-down"></i></span>
+          <div class="mini-stat-info">
+            <span>₱ {{hDeduction | number:'1.2-2'}}</span>
+            Total Deduction
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="mini-stat clearfix bg-net rounded">
+          <span class="mini-stat-icon"><i class="mdi mdi-cash-multiple"></i></span>
+          <div class="mini-stat-info">
+            <span>₱ {{hNetpay | number:'1.2-2'}}</span>
+            Net Pay
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="card">
+      <div class="card-header">
+        <h5>Employee Information</h5>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="detailForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Company</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="company"
+                    class="form-control" placeholder="Company">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Pay Period</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="payPeriod"
+                    class="form-control" placeholder="Pay Period">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Employee</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="employee"
+                    class="form-control" placeholder="Employee">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Cutoff Date</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="cutoffDate"
+                    class="form-control" placeholder="Cutoff Date">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Department</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="department"
+                    class="form-control" placeholder="Department">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Paydate</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="paydate"
+                    class="form-control" placeholder="Paydate">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Position</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="position"
+                    class="form-control" placeholder="Position">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Bank Account</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="bankAccount"
+                    class="form-control" placeholder="Bank Account">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Payroll Type</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="payrollType"
+                    class="form-control" placeholder="Payroll Type">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Salary Rate</label>
+                <div class="col-sm-9">
+                  <input type="text" readonly style="background-color: white;" formControlName="salaryRate"
+                    class="form-control" placeholder="Salary Rate">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h5>Payroll Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="2" class="text-center">SUMMARY</th>
+                  </tr>
+                  <tr>
+                    <th>TYPE</th>
+                    <th>AMOUNT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of summary; let i = index">
+                    <td>{{x.detail}}</td>
+                    <td>{{x.amount | number:'1.2-2'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="3" class="text-center">OVERTIME</th>
+                  </tr>
+                  <tr>
+                    <th>NAME</th>
+                    <th>AMOUNT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of overtime; let i = index">
+                    <td>{{x.detail}}</td>
+                    <td>{{x.amount | number:'1.2-2'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="3" class="text-center">ADDITION</th>
+                  </tr>
+                  <tr>
+                    <th>NAME</th>
+                    <th>AMOUNT</th>
+                    <th>TAXABLE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of addition; let i = index">
+                    <td>{{x.detail}}</td>
+                    <td>{{x.amount | number:'1.2-2'}}</td>
+                    <td>{{x.taxable}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="4" class="text-center">DEDUCTION</th>
+                  </tr>
+                  <tr>
+                    <th>NAME</th>
+                    <th>AMOUNT</th>
+                    <th>TAXABLE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of deduction; let i = index">
+                    <td>{{x.detail}}</td>
+                    <td>{{x.amount | number:'1.2-2'}}</td>
+                    <td>{{x.taxable}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h5>Timekeeping Information</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="tkFinal" class="table">
+                <thead>
+                  <tr>
+                    <th>EMPLOYEE CODE</th>
+                    <th>EMPLOYEE</th>
+                    <th>DATE</th>
+                    <th>RESTDAY</th>
+                    <th>SCHEDULE IN</th>
+                    <th>SCHEDULE OUT</th>
+                    <th>TIME IN</th>
+                    <th>TIME OUT</th>
+                    <th>REG DAYS WRK</th>
+                    <th>REG HOURS</th>
+                    <th>TARDY HRS</th>
+                    <th>UNDERTIME HRS</th>
+                    <th>ABSENT DAYS</th>
+                    <th>LWOP DAYS</th>
+                    <th>VL DAYS</th>
+                    <th>SL DAYS</th>
+                    <th>OTHER LV DAYS</th>
+                    <th>NITE-DIFF 10%</th>
+                    <th>REGULAR-OT</th>
+                    <th>REG-OT (NP HRS 10%)</th>
+                    <th>LEGAL HOL OT</th>
+                    <th>LEGAL HOL OT (NP HRS 10%)</th>
+                    <th>LEGAL HOL OT > 8HRS</th>
+                    <th>LEGAL HOL OT >8 (NP HRS 10%)</th>
+                    <th>LEGAL HOL RD</th>
+                    <th>LEGAL HOL RD (NP HRS 10%)</th>
+                    <th>LEGAL HOL RD >8HRS</th>
+                    <th>LEGAL HOL RD >8 (NP HRS 10%)</th>
+                    <th>SPECL HOL OT</th>
+                    <th>SPECL HOL OT (NP HRS 10%)</th>
+                    <th>SPECL HOLIDAY OT >8</th>
+                    <th>SPECL HOL OT >8 (NP HRS 10%)</th>
+                    <th>SPECIAL HOLIDAY RD</th>
+                    <th>SPECIAL HOL RD (NP HRS 10%)</th>
+                    <th>SPECL HOLIDAY ON RD > 8HRS</th>
+                    <th>SPECL HOL RD > 8 (NP HRS 10%)</th>
+                    <th>REST DAY OT</th>
+                    <th>REST DAY OT (NP HRS 10%)</th>
+                    <th>REST DAY OT > 8HRS</th>
+                    <th>REST DAY OT > 8 (NP HRS 10%)</th>
+                    <th>DOUBLE HOLIDAY OT</th>
+                    <th>DOUBLE HOLIDAY OT (NP HRS 10%)</th>
+                    <th>DOUBLE HOLIDAY OT > 8HRS</th>
+                    <th>DOUBLE HOLIDAY OT > 8 (NP HRS 10%)</th>
+                    <th>DOUBLE HOLIDAY RD</th>
+                    <th>DOUBLE HOL RD (NP HRS 10%)</th>
+                    <th>DOUBLE HOL ON RD > 8HRS</th>
+                    <th>DOUBLE HOL RD > 8 (NP HRS 10%)</th>
+                    <th>REMARKS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of tkView; let i = index">
+                    <td>{{x.employee_code}}</td>
+                    <td>{{x.display_name}}</td>
+                    <td>{{x.date | date: 'MM/dd/yyyy'}}</td>
+                    <td>{{x.rest_day}}</td>
+                    <td>{{x.schedule_time_in}}</td>
+                    <td>{{x.schedule_time_out}}</td>
+                    <td>{{x.actual_time_in}}</td>
+                    <td>{{x.actual_time_out}}</td>
+                    <td>{{x.reg | number:'1.2-2'}}</td>
+                    <td>{{x.reg | number:'1.2-2'}}</td>
+                    <td>{{x.late | number:'1.2-2'}}</td>
+                    <td>{{x.undertime | number:'1.2-2'}}</td>
+                    <td>{{x.is_absent}}</td>
+                    <td>{{x.lwop_hour | number:'1.2-2'}}</td>
+                    <td>{{x.vl_hour | number:'1.2-2'}}</td>
+                    <td>{{x.sl_hour | number:'1.2-2'}}</td>
+                    <td>{{x.otherl_hour | number:'1.2-2'}}</td>
+                    <td>{{x.regnd | number:'1.2-2'}}</td>
+                    <td>{{x.ot | number:'1.2-2'}}</td>
+                    <td>{{x.otnd | number:'1.2-2'}}</td>
+                    <td>{{x.lhot | number:'1.2-2'}}</td>
+                    <td>{{x.lhotnd | number:'1.2-2'}}</td>
+                    <td>{{x.lhot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.lhotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.lhrdot | number:'1.2-2'}}</td>
+                    <td>{{x.lhrdotnd | number:'1.2-2'}}</td>
+                    <td>{{x.lhrdot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.lhrdotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.shot | number:'1.2-2'}}</td>
+                    <td>{{x.shotnd | number:'1.2-2'}}</td>
+                    <td>{{x.shot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.shotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.shrdot | number:'1.2-2'}}</td>
+                    <td>{{x.shrdotnd | number:'1.2-2'}}</td>
+                    <td>{{x.shrdot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.shrdotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.otrd | number:'1.2-2'}}</td>
+                    <td>{{x.otrdnd | number:'1.2-2'}}</td>
+                    <td>{{x.otrd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.otrdnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.dhot | number:'1.2-2'}}</td>
+                    <td>{{x.dhotnd | number:'1.2-2'}}</td>
+                    <td>{{x.dhot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.dhotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.dhrdot | number:'1.2-2'}}</td>
+                    <td>{{x.dhrdotnd | number:'1.2-2'}}</td>
+                    <td>{{x.dhrdot_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.dhrdotnd_e8 | number:'1.2-2'}}</td>
+                    <td>{{x.remarks}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

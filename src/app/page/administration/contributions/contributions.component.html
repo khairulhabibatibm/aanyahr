@@ -1,0 +1,264 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Contribution Table</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Contribution Table</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-lg-3 email-aside border-lg-right">
+              <div class="aside-content">
+                <div class="form-group">
+                  <label class="control-label">Contribution Group</label>
+                  <ng-select [items]="groupList" name="Contribution Group" bindLabel="description" bindValue="id"
+                    placeholder="Select Contribution Group" [(ngModel)]="selectedGroup" (change)="selectedTable()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errGroup">Please select group!</p>
+                </div>
+              </div>
+              <div class="aside-content">
+                <div class="form-group">
+                  <label class="control-label">Contribution Type</label>
+                  <ng-select [items]="contributionType" name="Contribution Type" bindLabel="description" bindValue="id"
+                    placeholder="Select Contribution" [(ngModel)]="selectedContribution" (change)="selectedTable()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errType">Please select type!</p>
+                </div>
+              </div>
+              <div class="aside-content" *ngIf="isTax">
+                <div class="form-group">
+                  <label class="control-label">Payroll Type</label>
+                  <ng-select [items]="payrollType" name="Payroll Type" bindLabel="description" bindValue="id"
+                    placeholder="Select PayrollType" [(ngModel)]="selectedPayrollType" (change)="selectedTable()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errPayroll">Please select payroll type!</p>
+                </div>
+              </div>
+              <ul class="nav justify-content-end">
+                <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                  <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+                </button>
+                <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+                html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+                confirmButtonAriaLabel: 'Thumbs up, great!',
+                cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+                cancelButtonAriaLabel: 'Thumbs down'
+              }" class="btn btn-primary">
+                </button>
+              </ul>
+            </div>
+            <div class="col-lg-9">
+              <div class="table-responsive">
+                <table id="dataTableExample" class="table table-bordered">
+                  <thead *ngIf="tblSSS">
+                    <tr>
+                      <th>Range From</th>
+                      <th>Range To</th>
+                      <th>Salary Base</th>
+                      <th>Employee Share</th>
+                      <th>Employer Share</th>
+                      <th>EC</th>
+                      <th>MPF Employee Share</th>
+                      <th>MPF Employer Share</th>
+                      <th>
+                        <button type="button" (click)="add()" title="Add" class="btn btn-sm btn-primary btn-icon">
+                          <i class="feather icon-plus"></i>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="tblSSS">
+                    <tr *ngFor="let x of table; let i = index">
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.range_from | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.range_to | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.salary_base | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.employee_share | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.employer_share | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.employee_compensation | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.employee_mpf | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          value="{{x.employer_mpf | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <button type="button" (click)="remove(i)" title="Remove" class="btn btn-sm btn-danger btn-icon">
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <thead *ngIf="tblPhilhealth">
+                    <tr>
+                      <th>Minimum</th>
+                      <th>Maximum</th>
+                      <th>Premium Rate</th>
+                      <th>
+                        <button type="button" (click)="add()" title="Add" class="btn btn-sm btn-primary btn-icon">
+                          <i class="feather icon-plus"></i>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="tblPhilhealth">
+                    <tr *ngFor="let x of table; let i = index">
+                      <td>
+                        <input type="text" class="form-control" (change)="onChange(i, 'minimum', $event)"
+                          value="{{x.minimum | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" (change)="onChange(i, 'maximum', $event)"
+                          value="{{x.maximum | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" (change)="onChange(i, 'premium_rate', $event)"
+                          value="{{x.premium_rate | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                  <thead *ngIf="tblPagibig">
+                    <tr>
+                      <th>Range From</th>
+                      <th>Range To</th>
+                      <th>Share Type</th>
+                      <th>Employee Share</th>
+                      <th>Employer Share</th>
+                      <th>
+                        <button type="button" (click)="add()" title="Add" class="btn btn-sm btn-primary btn-icon">
+                          <i class="feather icon-plus"></i>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="tblPagibig">
+                    <tr *ngFor="let x of table; let i = index">
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'range_from', $event)" value="{{x.range_from | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'range_to', $event)" value="{{x.range_to | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <ng-select style="width: 150px;" [items]="pagibigType" name="Share Type" bindLabel="description"
+                          bindValue="id" placeholder="Select Share Type" [(ngModel)]="x.share_type_id"
+                          (change)="onChangeSelect(i, $event)">
+                        </ng-select>
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'employee_share', $event)"
+                          value="{{x.employee_share | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'employer_share', $event)"
+                          value="{{x.employer_share | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <button type="button" (click)="remove(i)" title="Remove" class="btn btn-sm btn-danger btn-icon">
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <thead *ngIf="tblTax">
+                    <tr>
+                      <th>Range From</th>
+                      <th>Range To</th>
+                      <th>Salary Base</th>
+                      <th>Base Amount</th>
+                      <th>Tax Percent</th>
+                      <th>
+                        <button type="button" (click)="add()" title="Add" class="btn btn-sm btn-primary btn-icon">
+                          <i class="feather icon-plus"></i>
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="tblTax">
+                    <tr *ngFor="let x of table; let i = index">
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'range_from', $event)" value="{{x.range_from | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'range_to', $event)" value="{{x.range_to | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'salary_base', $event)" value="{{x.salary_base | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'base_amount', $event)" value="{{x.base_amount | number : '1.4-4'}}"
+                          placeholder="0">
+                      </td>
+                      <td>
+                        <input style="width: 110px;" type="text" class="form-control"
+                          (change)="onChange(i, 'tax_percentage', $event)"
+                          value="{{x.tax_percentage | number : '1.4-4'}}" placeholder="0">
+                      </td>
+                      <td>
+                        <button type="button" (click)="remove(i)" title="Remove" class="btn btn-sm btn-danger btn-icon">
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

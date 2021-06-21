@@ -1,0 +1,160 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb" *ngIf="!isDashboard">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Filing</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/filing/official-business-view">Official Business</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-12 grid-margin">
+      <div class="card">
+        <form [formGroup]="officialBusinessForm">
+          <div class="card-body">
+            <h6 class="card-title">Official Business</h6>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="control-label">Company To Visit</label>
+                      <input type="text" formControlName="company" class="form-control" placeholder="Company To Visit">
+                      <p class="text-danger mt-1" *ngIf="errCompany">Company is needed!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="control-label">Date From</label>
+                      <div class="input-group">
+                        <ng-template #popDateFrom>
+                          <ngb-datepicker [(ngModel)]="dfPopDate" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="setDateFrom()"></ngb-datepicker>
+                          <timepicker [(ngModel)]="dfPopTime" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="setDateFrom()" [showMeridian]="true"></timepicker>
+                        </ng-template>
+                        <input class="form-control" formControlName="dateFrom" [popover]="popDateFrom"
+                          [outsideClick]="true" name="dp" value="{{dateFrom}}">
+                        <div class="input-group-prepend">
+                          <button class="btn btn-outline-light btn-icon calendar" type="button">
+                            <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label class="control-label">Date To</label>
+                      <div class="input-group">
+                        <ng-template #popDateTo>
+                          <ngb-datepicker [(ngModel)]="dtPopDate" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="setDateTo()"></ngb-datepicker>
+                          <timepicker [(ngModel)]="dtPopTime" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="setDateTo()" [showMeridian]="true"></timepicker>
+                        </ng-template>
+                        <input class="form-control" formControlName="dateTo" [popover]="popDateTo" [outsideClick]="true"
+                          name="dp" value="{{dateTo}}">
+                        <div class="input-group-prepend">
+                          <button class="btn btn-outline-light btn-icon calendar" type="button">
+                            <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">Location</label>
+                  <input type="text" formControlName="location" class="form-control" placeholder="Location">
+                  <p class="text-danger mt-1" *ngIf="errLocation">Location is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <label class="control-label">Reason</label>
+                  <input type="text" formControlName="reason" class="form-control" placeholder="Reason">
+                  <p class="text-danger mt-1" *ngIf="errReason">Reason is needed!</p>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input #file multiple placeholder="Choose file" (change)="uploadFile($event)" type="file"
+                    class="file-upload-default" id="fileUploadInputExample">
+                  <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+                    <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Files">
+                    <span class="input-group-append">
+                      <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="container">
+                  <div class="row icons-list">
+                    <div class="col-sm-6" *ngFor="let x of documents; let i = index">
+                      <div class="w-100">
+                        <div class="d-flex justify-content-between">
+                          <h6 class="text-body mb-2"><a href="{{x.url}}" target="_blank"><i
+                                class="{{x.file_class}}"></i>{{x.file_name}}</a></h6>
+                          <p class="text-muted tx-12"><i class="mdi mdi-close" (click)="deleteDocument(i)"></i></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="card-footer" *ngIf="!isView">
+          <ul class="nav justify-content-end">
+            <button *ngIf="isCancel" class="btn btn-warning btn-icon-text" (click)="cancel()">
+              <i data-feather="rotate-cw" appFeatherIcon class="btn-icon-prepend"></i> Cancel
+            </button> &nbsp;
+            <button *ngIf="isSubmit" class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #cancelModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Cancellation</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="control-label">Reason</label>
+          <textarea type="text" rows="3" [(ngModel)]="remarks" class="form-control" placeholder="Reason"></textarea>
+          <p class="text-danger mt-1" *ngIf="errCancelReason">Reason is needed!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-warning" (click)="cancelTransaction()">Cancel</button>
+  </div>
+</ng-template>

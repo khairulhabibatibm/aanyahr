@@ -1,0 +1,125 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Payroll</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Government Contribution</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Government Contribution</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <form [formGroup]="governmentForm">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Goverment Type</label>
+                  <ng-select formControlName="selectedGovernmentType" [items]="governmentList" name="Shift Code" bindLabel="description"
+                    bindValue="id" placeholder="Select Goverment Type">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errGovernmentType">Goverment Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Tag Type</label>
+                  <ng-select formControlName="selectedTagType" [items]="tagType" name="Tag Type" bindLabel="description" bindValue="id"
+                    placeholder="Select Tag Type" (change)="onChange()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errTypeType">Tag Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <ng-select formControlName="selectedEmployee" [items]="nameList" name="Name" bindLabel="description" bindValue="id"
+                    placeholder="Select Name">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errName">Name is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Timing</label>
+                  <ng-select formControlName="selectedTiming" [items]="timingList" name="Tag Type" bindLabel="description" bindValue="id"
+                    placeholder="Select Timing">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errTiming">Timing is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Amount</label>
+                  <input formControlName="amount" type="number" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errAmount">Amount is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">&nbsp;</label>
+                  <div class="form-group">
+                    <div class="row">
+                      <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                      </button>
+                      <button type="button" *ngIf="!isSearch" (click)="search()" class="btn btn-primary btn-icon-text ">
+                        <i data-feather="corner-right-down" appFeatherIcon class="btn-icon-prepend"></i>
+                        Add
+                      </button> &nbsp;
+                      <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                        <i data-feather="edit" appFeatherIcon class="btn-icon-prepend"></i> Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="table-responsive">
+            <table id="dataTableExample" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Employee Code</th>
+                  <th>Employee Name</th>
+                  <th>Amount</th>
+                  <th>Timing</th>
+                  <th>Taxable</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of table; let i = index">
+                  <td>{{x.employee_code}}</td>
+                  <td>{{x.display_name}}</td>
+                  <td>{{x.amount}}</td>
+                  <td>{{x.timing}}</td>
+                  <td>{{x.taxable}}</td>
+                  <td>
+                    <button type="button" (click)="delete(i)" title="Delete" class="btn btn-sm btn-danger btn-icon">
+                      <i class="feather icon-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

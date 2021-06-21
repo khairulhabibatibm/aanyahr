@@ -1,0 +1,479 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-baseline mb-2">
+            <h6 class="card-title mb-0">{{appTitle}}</h6>
+            <div class="mb-2" *ngIf="isButton">
+              <button class="btn p-0 no-dropdown-toggle-icon" (click)="reload()" type="button" id="dropdownMenuButton6">
+                <i class="icon-lg text-muted pb-3px" data-feather="repeat" appFeatherIcon></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body scroll">
+          <div *ngIf="reloadApp" class="animate__animated animate__flipInY ">
+            <ul class="list-group list-group-flush ">
+              <li class="list-group-item" *ngFor="let x of filingList; let i = index">
+                <div class="row">
+                  <div class="col-md-9">
+                    {{x.title}}
+                  </div>
+                  <div class="col-md-3">
+                    <a (click)="view(i)"><span class="badge" style="{{x.backgroundColor}}">{{x.status}}</span></a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="prev()">
+              <i data-feather="arrow-left" appFeatherIcon class="btn-icon-prepend"></i> Prev
+            </button> &nbsp;
+            <button class="btn btn-primary btn-icon-text" (click)="next()">
+              <i data-feather="arrow-right" appFeatherIcon class="btn-icon-prepend"></i> Next
+            </button>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label class="control-label">Attendance</label>
+            <button type="button" class="btn btn-sm btn-primary pull-right" (click)="viewLogs()">View</button>
+            <div class="input-group">
+              <input class="form-control" placeholder="mm/dd/yyyy" name="dp" [(ngModel)]="dateFrom" value="dateFrom"
+                (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+            <div class="input-group">
+              <input class="form-control" placeholder="mm/dd/yyyy" name="dp" [(ngModel)]="dateTo" (click)="dt.toggle()"
+                ngbDatepicker #dt="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Payslip</label>
+            <ng-select [items]="payslipList" (change)="selectedPayslip($event)" bindLabel="posted_payslip_code"
+              bindValue="posted_payslip_id" placeholder="Select Payslip">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <full-calendar [options]='calendarOptions' #calendar></full-calendar>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">Announcement</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<ng-template #attendanceModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Attendance</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="table-responsive">
+          <table id="modalTable" datatable [dtOptions]="dtOptions['generated']" class="table">
+            <thead>
+              <tr>
+                <th>EMPLOYEE CODE</th>
+                <th>EMPLOYEE</th>
+                <th>DATE</th>
+                <th>RESTDAY</th>
+                <th>SCHEDULE IN</th>
+                <th>SCHEDULE OUT</th>
+                <th>TIME IN</th>
+                <th>TIME OUT</th>
+                <th>RG</th>
+                <th>TARDY</th>
+                <th>UT</th>
+                <th>ABSNT</th>
+                <th>LWOP</th>
+                <th>VL</th>
+                <th>SL</th>
+                <th>OTLV</th>
+                <th>ND</th>
+                <th>RGOT</th>
+                <th>RGOTND</th>
+                <th>LHOT</th>
+                <th>LHOTND</th>
+                <th>LHOT>8</th>
+                <th>LHOTND>8</th>
+                <th>LHRD</th>
+                <th>LHRDND</th>
+                <th>LHRD>8</th>
+                <th>LHRDND>8</th>
+                <th>SHOT</th>
+                <th>SHOTND</th>
+                <th>SHOT>8</th>
+                <th>SHOTND>8</th>
+                <th>SHRD</th>
+                <th>SHRDND</th>
+                <th>SHRD>8</th>
+                <th>SHRDND>8</th>
+                <th>RDOT</th>
+                <th>RDOTND</th>
+                <th>RDOT>8</th>
+                <th>RDOTND>8</th>
+                <th>DHOT</th>
+                <th>DHOTND</th>
+                <th>DHOT>8</th>
+                <th>DHOTND>8</th>
+                <th>DHRD</th>
+                <th>DHRDND</th>
+                <th>DHRD>8</th>
+                <th>DHRDND>8</th>
+                <th>REMARKS</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #filingModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Employee Filing</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label">Filing Type</label>
+          <ng-select [items]="filingTypeList" name="Filing Type" bindLabel="description" bindValue="id"
+            placeholder="Select Filing Type" [(ngModel)]="selectedFiling" (change)="selectFiling()">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" *ngIf="isChangeLog">
+        <app-change-log-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-change-log-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isChangeSchedule">
+        <app-change-schedule-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-change-schedule-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isLeave">
+        <app-leave-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-leave-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOfficialBusiness">
+        <app-official-business-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail"
+          [fileType]="fileType">
+        </app-official-business-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOvertime">
+        <app-overtime-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-overtime-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOffset">
+        <app-offset-detail (isSuccess)="isSuccess($event)" [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-offset-detail>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #payslipModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"> <button class="btn btn-success btn-block" (click)="openPDF()">Download PDF</button></h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="htmlData">
+      <br>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-8 align-self-center">
+            <h6 class="">{{payslipHeader.company_name}}</h6>
+            <!-- <p class="text-muted">Lot 10 Block 2 First Philippine Industrial Park II SEZ
+              Brgy. San Rafael, Sto. Tomas, Batangas 4234
+              </p> -->
+          </div>
+          <div class="col-md-4">
+            <img style="width:150px;height:100px;" src="{{url}}">
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <label class="col-sm-4">Employee :</label>
+              <label class="col-sm-8" style="font-weight: lighter;">{{payslipHeader.display_name}}</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <label class="col-sm-4">Pay Period :</label>
+              <label class="col-sm-8" style="font-weight: lighter;">{{payslipHeader.pay_period}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <label class="col-sm-4">Department :</label>
+              <label class="col-sm-8" style="font-weight: lighter;">{{payslipHeader.department}}</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <label class="col-sm-4">Payslip # :</label>
+              <label class="col-sm-8" style="font-weight: lighter;">{{payslipHeader.payroll_code}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6 alert alert-fill-secondary">
+            <h6 class="text-center">Earnings</h6>
+          </div>
+          <div class="col-md-6 alert alert-fill-secondary">
+            <h6 class="text-center">Deductions</h6>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row alert alert-success"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6">
+                <h6>Basic Gross</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P {{payslipHeader.salary_rate | number : '1.2-2'}}</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Regular ND</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P {{payslipHeader.regnd_ms | number : '1.2-2'}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Absent</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.absent | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Late</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.late | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Undertime</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.undertime | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row alert alert-success"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6">
+                <h6>Basic Salary</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P {{payslipHeader.basic_salary | number : '1.2-2'}}</h6>
+              </div>
+            </div>
+            <div class="row alert alert-info"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-12">
+                <h6>Holiday & Overtime</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of payslipDetail | filterArray: 1">
+              <div class="col-md-6">
+                <label>{{item.detail}}</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P {{item.amount | number : '1.2-2'}}</p>
+              </div>
+            </div>
+            <div class="row alert alert-info"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-12">
+                <h6>Taxable Earnings (+)</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of payslipDetail | filterArray: 2">
+              <div class="col-md-6">
+                <label>{{item.detail}}</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P {{item.amount | number : '1.2-2'}}</p>
+              </div>
+            </div>
+            <div class="row alert alert-info"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-12">
+                <h6>Non-Taxable Earnings (+)</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of payslipDetail | filterArray: 3">
+              <div class="col-md-6">
+                <label>{{item.detail}}</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P {{item.amount | number : '1.2-2'}}</p>
+              </div>
+            </div>
+            <div class="row alert alert-success"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6 ">
+                <h6>Gross Pay</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P {{payslipHeader.gross_income | number : '1.2-2'}}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-12 alert alert-warning"
+                style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+                <h6>Government Contribution</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>SSS</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.sss | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Pagibig</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.pagibig | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Philhealth</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{payslipHeader.philhealth | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row alert alert-danger"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6">
+                <h6>Withholding Tax</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P ({{payslipHeader.witholding_tax | number : '1.2-2'}})</h6>
+              </div>
+            </div>
+            <div class="row alert alert-warning"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-12">
+                <h6>Loan (-)</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of payslipDetail | filterArray: 4">
+              <div class="col-md-6">
+                <label>{{item.detail}}</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{item.amount | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row alert alert-warning"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-12">
+                <h6>Deduction (-)</h6>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of payslipDetail | filterArray: 5">
+              <div class="col-md-6">
+                <label>{{item.detail}}</label>
+              </div>
+              <div class="col-md-6">
+                <p class="text-right">P ({{item.amount | number : '1.2-2'}})</p>
+              </div>
+            </div>
+            <div class="row alert alert-danger"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6">
+                <h6>Total Deduction</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P ({{payslipHeader.total_deduction | number : '1.2-2'}})</h6>
+              </div>
+            </div>
+            <div class="row alert alert-success"
+              style="padding-left: 0; padding-right: 0;padding-top: 5px; padding-bottom: 5px;">
+              <div class="col-md-6">
+                <h6>Net Pay</h6>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-right">P {{payslipHeader.net_salary | number : '1.2-2'}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

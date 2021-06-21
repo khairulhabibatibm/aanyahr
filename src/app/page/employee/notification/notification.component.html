@@ -1,0 +1,77 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Employee</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Notification</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label class="control-label">Date From</label>
+            <div class="input-group">
+              <input class="form-control" placeholder="mm/dd/yyyy" name="dp" [(ngModel)]="dateFrom"
+                value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Date To</label>
+            <div class="input-group">
+              <input class="form-control" placeholder="mm/dd/yyyy" name="dp" [(ngModel)]="dateTo"
+                value="dateFrom" (click)="d2.toggle()" ngbDatepicker #d2="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d2.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Transaction</label>
+            <ng-select 
+            [items]="transactionList"
+              name="Employee"
+              bindLabel="description" 
+              bindValue="id" 
+              placeholder="Select Module"
+              [(ngModel)]="transactionType">
+            </ng-select>
+          </div>
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <div class="input-group">
+              <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <button type="button" *ngIf="!isSearch" class="btn btn-primary btn-icon-text" (click)="search()">
+                <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i>
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div id="content">
+        <ul class="timeline">
+          <li  *ngFor="let x of history; let i = index" class="event" [attr.data-date]="x.date_created" >
+            <h3>{{x.transaction_type}}</h3> {{x.lapse}}
+            <p>{{x.description}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

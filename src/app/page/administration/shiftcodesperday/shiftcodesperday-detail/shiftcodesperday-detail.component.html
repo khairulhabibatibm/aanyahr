@@ -1,0 +1,230 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/administration/shiftcodesperday-view">Shift Codes</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>Shift Codes</h6>
+          </div>
+          <form [formGroup]="shiftForm">
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label">Shift Name</label>
+                  <input type="text" formControlName="shiftName" class="form-control" placeholder="Shift Name">
+                  <p class="text-danger mt-1" *ngIf="errShiftName">Please input shift name!</p>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">Grace Period</label>
+                  <input type="number" formControlName="gracePeriod" class="form-control" placeholder="Grace Period">
+                  <p class="text-danger mt-1" *ngIf="errGracePeriod">Please input number!</p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <input type="text" formControlName="description" class="form-control" placeholder="Description">
+                  <p class="text-danger mt-1" *ngIf="errDescription">Please input description!</p>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">&nbsp;</label>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="checkbox" formControlName="isFlexi" (change)="onFlexi($event)"
+                        class="form-check-input">
+                      <i class="input-frame"></i>
+                      Is Flexi?
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+          </form>
+          <div class="row">
+            <div class="table-responsive">
+              <table id="dataTableExample" class="table">
+                <thead>
+                  <tr>
+                    <th>Day</th>
+                    <th>Restday</th>
+                    <th>Time In</th>
+                    <th>Timout In</th>
+                    <th>Working Hrs</th>
+                    <th>Halfday In</th>
+                    <th>Halfday Out</th>
+                    <th>Night Diff In</th>
+                    <th>Night Diff Out</th>
+                    <th>Break Count</th>
+                    <th *ngIf="firstBreak">First Break In</th>
+                    <th *ngIf="firstBreak">First Break Out</th>
+                    <th *ngIf="secondBreak">Second Break In</th>
+                    <th *ngIf="secondBreak">Second Break Out</th>
+                    <th *ngIf="thirdBreak">Third Break In</th>
+                    <th *ngIf="thirdBreak">Third Break Out</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of shiftDetail; let i = index">
+                    <td>{{x.day}}</td>
+                    <td>
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" (ngModelChange)="selectRestDay(i)" class="custom-control-input" [(ngModel)]="x.isRestday"
+                          id="{{'chk' + i}}">
+                        <label class="custom-control-label" for="{{'chk' + i}}"></label>
+                      </div>
+                    </td>
+                    <td>
+                      <ng-template #popTemplateIn>
+                        <ngb-timepicker [(ngModel)]="x.popTimeIn" (ngModelChange)="onChangeTimeIn(i, $event)"
+                          [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.timeIn | date: 'hh:mm aa' }}" [popover]="popTemplateIn" [outsideClick]="true"
+                        placement="bottom">
+                    </td>
+                    <td>
+                      <ng-template #popTemplateOut>
+                        <ngb-timepicker [(ngModel)]="x.popTimeOut" (ngModelChange)="onChangeTimeOut(i, $event)"
+                          [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.timeOut | date: 'hh:mm aa' }}" [popover]="popTemplateOut" [outsideClick]="true"
+                        placement="bottom">
+                    </td>
+                    <td>
+                      <input [disabled]="!shiftForm.value.isFlexi" type="text" [(ngModel)]="x.workingHrs" class="form-control" placeholder="0">
+                    </td>
+                    <td>
+                      <ng-template #popTemplateHalfdayIn>
+                        <ngb-timepicker [(ngModel)]="x.popHalfdayIn" (ngModelChange)="onChangeHalfdayIn(i, $event)"
+                          [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.halfdayIn | date: 'hh:mm aa' }}" [popover]="popTemplateHalfdayIn"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+                    <td>
+                      <ng-template #popTemplateHalfdayOut>
+                        <ngb-timepicker [(ngModel)]="x.popHalfdayOut" (ngModelChange)="onChangeHalfdayOut(i, $event)"
+                          [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.halfdayOut | date: 'hh:mm aa' }}" [popover]="popTemplateHalfdayOut"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+                    <td>
+                      <ng-template #popTemplateNightDiffIn>
+                        <ngb-timepicker [(ngModel)]="x.popNightDiffIn" (ngModelChange)="onChangeNightDiffIn(i, $event)"
+                          [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.nightDiffIn | date: 'hh:mm aa' }}" [popover]="popTemplateNightDiffIn"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+                    <td>
+                      <ng-template #popTemplateNightDiffOut>
+                        <ngb-timepicker [(ngModel)]="x.popNightDiffOut"
+                          (ngModelChange)="onChangeNightDiffOut(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.nightDiffOut | date: 'hh:mm aa' }}" [popover]="popTemplateNightDiffOut"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+                    <td>
+                      <ng-select [items]="breakCount" name="Break Count" bindLabel="description" bindValue="id"
+                      placeholder="Select Break" [(ngModel)]="x.breakCount" (change)="breakChange()">
+                    </ng-select>
+                    </td>
+
+                    <td *ngIf="x.breakCount !== null">
+                      <ng-template #popTemplateFirstBreakIn>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakIn"
+                          (ngModelChange)="onFirstBreakIn(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.firstBreakIn | date: 'hh:mm aa' }}" [popover]="popTemplateFirstBreakIn"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+
+                    <td *ngIf="x.breakCount !== null">
+                      <ng-template #popTemplateFirstBreakOut>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakOut"
+                          (ngModelChange)="onFirstBreakOut(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.firstBreakOut | date: 'hh:mm aa' }}" [popover]="popTemplateFirstBreakOut"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+
+                    <td *ngIf="x.breakCount >= 2">
+                      <ng-template #popTemplateSecondBreakIn>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakIn"
+                          (ngModelChange)="onSecondBreakIn(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.secondBreakIn | date: 'hh:mm aa' }}" [popover]="popTemplateSecondBreakIn"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+
+                    <td *ngIf="x.breakCount >= 2">
+                      <ng-template #popTemplateSecondBreakOut>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakOut"
+                          (ngModelChange)="onSecondBreakOut(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.secondBreakOut | date: 'hh:mm aa' }}" [popover]="popTemplateSecondBreakOut"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+
+                    <td *ngIf="x.breakCount >= 3">
+                      <ng-template #popTemplateThirdBreakIn>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakIn"
+                          (ngModelChange)="onThirdBreakIn(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.thirdBreakIn | date: 'hh:mm aa' }}" [popover]="popTemplateThirdBreakIn"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+
+                    <td *ngIf="x.breakCount >= 3">
+                      <ng-template #popTemplateThirdBreakOut>
+                        <ngb-timepicker [(ngModel)]="x.popFirstBreakOut"
+                          (ngModelChange)="onThirdBreakOut(i, $event)" [meridian]="true"></ngb-timepicker>
+                      </ng-template>
+                      <input [disabled]="!x.disableRow" style="width: 110px;" type="text" class="form-control"
+                        value="{{ x.thirdBreakOut | date: 'hh:mm aa' }}" [popover]="popTemplateThirdBreakOut"
+                        [outsideClick]="true" placement="bottom">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Shift Code
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

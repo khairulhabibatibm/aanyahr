@@ -1,0 +1,57 @@
+<div class="spinner-wrapper full-screen" *ngIf="loader">
+  <div class="spinner"></div>
+</div>
+<div class="row w-100 mx-0 auth-page">
+  <div class="col-md-8 col-xl-6 mx-auto">
+    <div class="card">
+      <div class="row">
+        <!-- <div class="col-md-4 pr-md-0">
+          <div class="auth-left-wrapper">
+          </div>
+        </div> -->
+        <div class="col-md-2 pl-md-0"></div>
+        <div class="col-md-8 pl-md-0">
+          <div class="auth-form-wrapper px-4 py-5" style="border-style: solid; border-width: thin; border-spacing: 15px; border-collapse: separate;">
+            <!-- <a routerLink="." class="noble-ui-logo d-block mb-2">Aanya<span>HR</span></a> -->
+            <img src="../../../assets/images/logo.png" width="280px" class="noble-ui-logo d-block mb-2">
+            <h5 class="text-muted font-weight-normal mb-4">Welcome back! Log in to your account.</h5>
+            <form class="forms-sample" [formGroup]="loginForm" (ngSubmit)="login()">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Company Code</label>
+                <input type="text" class="form-control" formControlName="company_code" placeholder="Company Code">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Username</label>
+                <input type="text" class="form-control" formControlName="username" placeholder="Email">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <div class="input-group">
+                  <input type="{{type}}" class="form-control" formControlName="password" autocomplete="current-password" placeholder="Password">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-light btn-icon calendar" type="button"
+                      (click)="toggle()">
+                      <i data-feather="eye" appFeatherIcon class="text-secondary"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="form-check form-check-flat form-check-primary">
+                <p class="text-danger mt-1" *ngIf="validate">{{error}}</p>
+                <p class="text-danger mt-1" *ngIf="httpvalidate">{{httperror}}</p>
+              </div>
+              <div class="mt-3">
+                <button class="btn btn-primary mr-2 mb-2 mb-md-0" type="button" type="submit" [disabled]="disSubmit">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="disSubmit"></span>
+                  {{submitText}}
+                </button>
+              </div>
+              <!-- <a *ngIf="isSignup" routerLink="/register" class="d-block mt-3 text-muted" >Not a user? Sign up</a> -->
+            </form>
+          </div>
+        </div>
+        <div class="col-md-2 pl-md-0"></div>
+      </div>
+    </div>
+  </div>
+</div>

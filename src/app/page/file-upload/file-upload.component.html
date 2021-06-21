@@ -1,0 +1,29 @@
+<div class="form-group">
+  <input #file placeholder="Choose file" (change)="uploadFile($event)" type="file" name="img[]"
+    class="file-upload-default" id="fileUploadInputExample">
+  <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+    <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Log">
+    <span class="input-group-append">
+      <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+    </span>
+  </div>
+  <div class="progress" *ngIf="progress > 0">
+    <div class="progress-bar" role="progressbar" style="width: {{progress}}%;" aria-valuemin="0" aria-valuemax="100">
+      {{progress}}%</div>
+  </div>
+</div>
+
+<!-- <div class="row" style="margin-bottom:15px;">
+  <div class="col-md-3">
+    <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+    <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
+  </div>
+  <div class="col-md-4">
+    <span class="upload" *ngIf="progress > 0">
+      {{progress}}%
+    </span>
+    <span class="upload" *ngIf="message">
+      {{message}}
+    </span>
+  </div>
+</div> -->

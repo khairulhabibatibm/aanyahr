@@ -1,0 +1,139 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Employee</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Employee Recurring</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Employee Recurring</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <form [formGroup]="recurringForm">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Adjustment Type</label>
+                  <ng-select [items]="typeList" name="Adustment Type" bindLabel="description" bindValue="id"
+                    formControlName="selectedType" placeholder="Select Adjustment Type" (change)="modelChangeFn()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errType">Adjustment Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Adjustment</label>
+                  <ng-select [items]="adjList" name="Adjustment" bindLabel="recurring_name"
+                    formControlName="selectedAdjustment" bindValue="int_recurring_id" placeholder="Select Adjustment">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errAdjustment">Adjustment is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Timing</label>
+                  <ng-select [items]="timingList" name="Timing" bindLabel="description" bindValue="id"
+                    formControlName="selectedTiming" placeholder="Select Timing" (change)="onChange()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errTiming">Timing is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Amount</label>
+                  <input type="number" formControlName="amount" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errAmount">Amount is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Tag Type</label>
+                  <ng-select [items]="tagType" name="Tag Type" bindLabel="description" bindValue="id"
+                    formControlName="selectedTagType" placeholder="Select Tag Type" (change)="onChange()">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errTagType">Tag Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <ng-select [items]="nameList" name="Name" bindLabel="description" bindValue="id"
+                    formControlName="selectedEmployee" placeholder="Select Name">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errName">Name is needed!</p>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">&nbsp;</label>
+                  <div class="form-group">
+                    <div class="row">
+                      <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                      </button>
+                      <button type="button" *ngIf="!isSearch" (click)="search()" class="btn btn-primary btn-icon-text ">
+                        <i data-feather="corner-right-down" appFeatherIcon class="btn-icon-prepend"></i>
+                        Add
+                      </button> &nbsp;
+                      <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                        <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+              <thead>
+                <tr>
+                  <th>Employee Code</th>
+                  <th>Employee Name</th>
+                  <th>Amount</th>
+                  <th>Timing</th>
+                  <th>Taxable</th>
+                  <th>Min Hr(s)</th>
+                  <th>Max Hr(s)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of table; let i = index">
+                  <td>{{x.employee_code}}</td>
+                  <td>{{x.display_name}}</td>
+                  <td>{{x.amount}}</td>
+                  <td>{{x.timing}}</td>
+                  <td>{{x.taxable}}</td>
+                  <td>{{x.minimum_hour}}</td>
+                  <td>{{x.maximum_hour}}</td>
+                  <td>
+                    <button type="button" (click)="delete(i)" title="Delete" class="btn btn-sm btn-danger btn-icon">
+                      <i class="feather icon-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <div class="card">
+    <div class="card-header">
+      <h6>Report</h6>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="reportForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Report Type</label>
+              <ng-select [items]="reportList" name="industry" bindLabel="report_name" bindValue="report_id"
+                placeholder="Select Reports" formControlName="reportID" (change)="onChange()">
+              </ng-select>
+              <p class="text-danger mt-1" *ngIf="errReports">Please select report type!</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Date From</label>
+              <div class="input-group">
+                <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateFrom"
+                  value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                    <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="control-label">Date To</label>
+              <div class="input-group">
+                <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateTo"
+                  (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                    <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="control-label">Employee</label>
+              <div class="row">
+                <div class="col-md-8">
+                  <ng-select [items]="employeeList" name="Employee" bindLabel="display_name"
+                    bindValue="employee_id" placeholder="Select Employee" formControlName="selectedEmployee">
+                  </ng-select>
+                </div>
+                <div class="col-md-3">
+                  <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button>
+                  <button type="button" *ngIf="!isSearch" (click)="search()" class="btn btn-primary btn-icon-text ">
+                    <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i>
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr>
+      <app-child-report #appChild [headerList]="headerList" *ngIf="isReport"></app-child-report>
+    </div>
+  </div>
+</div>

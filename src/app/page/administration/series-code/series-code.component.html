@@ -1,0 +1,105 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Series Code</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Series Code</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="table-responsive">
+            <table id="dataTableExample" class="table" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+              <thead>
+                <tr>
+                  <th>Transaction Type</th>
+                  <th>Prefix</th>
+                  <th>Year</th>
+                  <th>Series</th>
+                  <th>Length</th>
+                  <th>Code</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of table; let i = index">
+                  <td>{{x.module_name}}</td>
+                  <td>{{x.prefix}}</td>
+                  <td>{{x.year}}</td>
+                  <td>{{x.series}}</td>
+                  <td>{{x.length}}</td>
+                  <td>{{x.series_code}}</td>
+                  <td>
+                    <button type="button" title="Edit" (click)="editSeries(x.module_id)"
+                      class="btn btn-sm btn-primary btn-icon">
+                      <i class="feather icon-edit-2"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #seriesModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">{{ transactionType }}</h5>
+    {{ seriesCode }}
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="seriesForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Prefix</label>
+            <input formControlName="prefix" (input)="loadSeries()" type="text" class="form-control"
+              placeholder="Prefix">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Year</label>
+            <input formControlName="year" (input)="loadSeries()" type="text" class="form-control" placeholder="Year">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Series</label>
+            <input formControlName="series" (input)="loadSeries()" type="text" class="form-control"
+              placeholder="Series">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Length</label>
+            <input formControlName="length" (input)="loadSeries()" type="text" class="form-control"
+              placeholder="Length">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')" (click)="submit()">Save
+      changes</button>
+  </div>
+</ng-template>

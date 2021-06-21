@@ -1,0 +1,74 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Timekeeping</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Timekeeping Generation</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Timekeeping Generation</h6>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav justify-content-end">
+                  <button class="btn btn-primary btn-icon-text"
+                    [routerLink]="['/layout/timekeeping/timekeeping-generation-detail']">
+                    <i data-feather="edit" appFeatherIcon class="btn-icon-prepend"></i> Add Timekeeping
+                  </button>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+              <thead>
+                <tr>
+                  <th>Timekeeping Code</th>
+                  <th>Payroll Type</th>
+                  <th>Date From</th>
+                  <th>Date To</th>
+                  <th>Category</th>
+                  <th>Branch</th>
+                  <th>Confidential</th>
+                  <th>Created By</th>
+                  <th>Date Created</th>
+                  <th>Generated</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of table; let i = index">
+                  <td>{{x.timekeepingCode}}</td>
+                  <td>{{x.payrollType}}</td>
+                  <td>{{x.dateFrom}}</td>
+                  <td>{{x.dateTo}}</td>
+                  <td>{{x.category}}</td>
+                  <td>{{x.branch}}</td>
+                  <td>{{x.confidentiality}}</td>
+                  <td>{{x.createdDesc}}</td>
+                  <td>{{x.dateCreated}}</td>
+                  <td>{{x.generatedCount}}</td>
+                  <td>
+                    <button type="button" title="Edit" (click)="viewTimekeeping(x.encrypttimekeepingId)"
+                      class="btn btn-sm btn-primary btn-icon">
+                      <i class="feather icon-edit-2"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

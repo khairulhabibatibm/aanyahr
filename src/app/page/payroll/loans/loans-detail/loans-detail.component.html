@@ -1,0 +1,213 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Payroll</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/payroll/loans-view">Loan</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Loan</h6>
+            </div>
+            <div class="col-md-6">
+              <ul class="nav justify-content-end">
+                <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                  <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Loan
+                </button>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="loanForm">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Loan Type</label>
+                  <ng-select formControlName="selectedLoanType" [items]="loanType" bindLabel="description"
+                    bindValue="id" placeholder="Select Loan Type">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errLoanType">Loan Type is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="control-label">Loan Name</label>
+                  <input formControlName="loanName" type="text" class="form-control" placeholder="Loan Name">
+                  <p class="text-danger mt-1" *ngIf="errLoanName">Loan Name is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">Employee</label>
+                  <ng-select formControlName="selectedEmployee" [items]="employeeList" bindLabel="display_name"
+                    bindValue="employee_id" placeholder="Select Employee">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errEmployee">Employee is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="control-label">Total Loan Amount</label>
+                  <input (change)="computeLoan()" formControlName="totalLoanAmount" type="number" class="form-control"
+                    placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errTotalAmount">Loan Amount is needed!</p>
+                  <p class="text-danger mt-1" *ngIf="errAmount">Total Loan Amount and detail is not equal</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Loan Date</label>
+                  <div class="input-group">
+                    <input formControlName="loanDate" class="form-control" placeholder="mm/dd/yyyy" name="dp"
+                      value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                        <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-danger mt-1" *ngIf="errLoanDate">Loan Date is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Loan Start</label>
+                  <div class="input-group">
+                    <input (ngModelChange)="computeLoan()" formControlName="loanStart" class="form-control"
+                      placeholder="mm/dd/yyyy" name="dp" value="dateFrom" (click)="d2.toggle()" ngbDatepicker
+                      #d2="ngbDatepicker">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d2.toggle()">
+                        <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-danger mt-1" *ngIf="errLoanStart">Loan Start is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <div class="form-group">
+                  <label class="control-label">Terms</label>
+                  <input (change)="computeLoan()" formControlName="terms" type="number" class="form-control"
+                    placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errTerms">Terms is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Loan Timing</label>
+                  <ng-select (change)="computeLoan()" formControlName="selectedLoanTiming" [items]="loanTiming"
+                    bindLabel="description" bindValue="id" placeholder="Select Loan Timing">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errTiming">Loan Timing is needed!</p>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="row">
+            <div class="table-responsive">
+              <table id="dataTableExample" class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Paid</th>
+                    <th>Balance</th>
+                    <th>Payslip</th>
+                    <th>
+                      <button type="button" title="Edit" (click)="addLoan()" class="btn btn-sm btn-primary btn-icon">
+                        <i class="feather icon-plus"></i>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of table; let i = index">
+                    <td>{{x.date | date: 'MM/dd/yyyy'}}</td>
+                    <td>{{x.amount}}</td>
+                    <td>{{x.paid}}</td>
+                    <td>{{x.balance}}</td>
+                    <td>{{x.payslip}}</td>
+                    <td>
+                      <button type="button" title="Edit" (click)="viewLoan(updateModal, i)"
+                        class="btn btn-sm btn-primary btn-icon">
+                        <i class="feather icon-edit-2"></i>
+                      </button>&nbsp;
+                      <button type="button" title="Edit" (click)="deleteLoan(i)" class="btn btn-sm btn-danger btn-icon">
+                        <i class="feather icon-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Total Amount</th>
+                    <th>{{fAmount}}</th>
+                    <th>{{fPaid}}</th>
+                    <th>{{fBalance}}</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Attendance Log</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="updateForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Date</label>
+            <div class="input-group">
+              <input formControlName="date" class="form-control" placeholder="mm/dd/yyyy" name="dp" value="dateFrom"
+                (click)="d3.toggle()" ngbDatepicker #d3="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d3.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-danger mt-1" *ngIf="errLoanDate">Loan Date is needed!</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">Amount</label>
+            <input formControlName="amount" type="number" class="form-control" placeholder="0">
+            <p class="text-danger mt-1" *ngIf="errTotalAmount">Amount is needed!</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="updateLoan()">Save changes</button>
+  </div>
+</ng-template>

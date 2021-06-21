@@ -1,0 +1,76 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <div class="card">
+    <div class="card-header">
+      <h6>Data Upload</h6>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="control-label">Data Upload</label>
+            <ng-select [items]="uploadList" name="industry" bindLabel="data_upload_name" bindValue="data_upload_id"
+              placeholder="Select Data Upload" [(ngModel)]="selectedData" (change)="onChange()">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <input #file placeholder="Choose file" (change)="uploadFile($event)" type="file" name="img[]"
+              class="file-upload-default" id="fileUploadInputExample">
+            <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+              <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Log">
+              <span class="input-group-append">
+                <button class="file-upload-browse btn btn-primary btn-icon-text" type="button"><i data-feather="upload"
+                    appFeatherIcon class="btn-icon-prepend"></i> Upload</button> &nbsp;
+
+              </span>
+            </div>
+            <div class="progress" *ngIf="progress > 0">
+              <div class="progress-bar" role="progressbar" style="width: {{progress}}%;" aria-valuemin="0"
+                aria-valuemax="100">
+                {{progress}}%</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <div class="form-group">
+              <button class="btn btn-primary btn-icon-text" (click)="exportTemplate()" type="button"><i
+                  data-feather="download" appFeatherIcon class="btn-icon-prepend"></i> Download Template</button>&nbsp;
+              <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="table-responsive">
+        <p class="text-danger mt-1">{{errorText}}</p>
+        <table id="dataTableExample" class="table table-bordered" *ngIf="showTable">
+          <thead>
+            <tr>
+              <ng-container *ngFor="let x of tableOutput; let i = index">
+                <th *ngIf="x.is_view">{{x.colname}}</th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of returnOutput">
+              <ng-container *ngFor="let objKey of _object.keys(row); let j = index">
+                <ng-container *ngIf="objKey !== 'with_error'">
+                  <td [ngClass]="row.with_error === 1 ? 'has_error': ''">{{ row[objKey] }}</td>
+                </ng-container>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,168 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Management</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Approval</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-4 border-lg-right">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label class="control-label">Date From</label>
+            <div class="input-group">
+              <input class="form-control" (ngModelChange)="searchDate($event, 'start')" placeholder="mm/dd/yyyy" name="dp"
+                [(ngModel)]="dateFrom" value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Date To</label>
+            <div class="input-group">
+              <input class="form-control" (ngModelChange)="searchDate($event, 'end')" placeholder="mm/dd/yyyy" name="dp"
+                [(ngModel)]="dateTo" (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+              <div class="input-group-append">
+                <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                  <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Series Code</label>
+            <input type="text"  [(ngModel)]="series" (ngModelChange)="searchDate($event, '')" class="form-control" placeholder="Series Code">
+          </div>
+          <div class="form-group">
+            <div class="form-check" *ngFor="let x of moduleList; let i = index">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" (click)="selectedModule(x.module_id)" name="optionsRadios"
+                  id="optionsRadios" value="{{x.module_id}}">
+                <i class="input-frame"></i>
+                {{x.module_name}} <span class="badge badge-pill badge-warning">{{x.count}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit(1)">
+              <i data-feather="user-check" appFeatherIcon class="btn-icon-prepend"></i> Approved
+            </button>
+            &nbsp;
+            <button class="btn btn-danger btn-icon-text" (click)="submit(0)">
+              <i data-feather="user-x" appFeatherIcon class="btn-icon-prepend"></i> Disapproved
+            </button>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table id="dataTableExample"  class="table table-bordered" *ngIf="showTable">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" (change)="checkAll($event)"
+                        class="custom-control-input" id="check-all">
+                      <label class="custom-control-label" for="check-all"></label>
+                    </div>
+                  </th>
+                  <th *ngFor="let x of headerList; let i = index">{{x.colname}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of returnOutput; let i = index">
+                  <td>
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" [checked]="isChecked" (change)="checkTrans(i, $event)" class="custom-control-input"
+                        id="{{row.transaction_code}}">
+                      <label class="custom-control-label" for="{{row.transaction_code}}"></label>
+                    </div>
+                  </td>
+                  <td *ngFor="let objKey of _object.keys(row); let j = index">{{ row[objKey] }} </td>
+                  <td>
+                    <button type="button" title="Edit" (click)="view(i)" class="btn btn-sm btn-primary btn-icon">
+                      <i class="feather icon-external-link"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #filingModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Employee Filing</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12" *ngIf="isChangeLog">
+        <app-change-log-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-change-log-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isChangeSchedule">
+        <app-change-schedule-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-change-schedule-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isLeave">
+        <app-leave-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-leave-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOfficialBusiness">
+        <app-official-business-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-official-business-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOvertime">
+        <app-overtime-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-overtime-detail>
+      </div>
+      <div class="col-md-12" *ngIf="isOffset">
+        <app-offset-detail [parentDetail]="parentDetail" [fileType]="fileType">
+        </app-offset-detail>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #disapprovedModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"></h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="control-label">Remarks</label>
+          <textarea type="text" rows="3" [(ngModel)]="remarks" class="form-control" placeholder="Reason"></textarea>          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-danger" (click)="disapprovedTransaction()">Disapproved</button>
+  </div>
+</ng-template>

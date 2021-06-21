@@ -1,0 +1,388 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Employee Setup</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/employee/employee-category-list">Employee Category</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="categoryForm">
+            <aw-wizard [awNavigationMode] navigateBackward="allow" navigateForward="allow">
+              <aw-wizard-step stepTitle="Category" [awCompletedStep]="complete">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Category Name</label>
+                      <input type="text" formControlName="categoryName" class="form-control"
+                        placeholder="Category Name">
+                      <p class="text-danger mt-1" *ngIf="errCategoryName">Please input category name!</p>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Access Level</label>
+                      <ng-select [items]="accessLevel" bindLabel="description" bindValue="id"
+                        placeholder="Select Access Level" formControlName="selectedAccessLevel"
+                        (change)="showDescription(0)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errAccessLevel">Please input category name!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Description</label>
+                      <input type="text" formControlName="description" class="form-control" placeholder="Description">
+                      <p class="text-danger mt-1" *ngIf="errDescription">Please input category name!</p>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Approval Group</label>
+                      <ng-select [items]="approvalGroup" bindLabel="description" bindValue="id"
+                        placeholder="Select Access Level" formControlName="selectedApprovalGroup"
+                        (change)="showDescription(1)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errApprovalGroup">Please input category name!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+                </div>
+              </aw-wizard-step>
+              <aw-wizard-step stepTitle="Timekeeping" [awCompletedStep]="complete">
+                <div class="row">
+                  <div class="col-md-6 border-right">
+                    <div class="table-responsive">
+                      <table class="table" style="border-collapse: collapse; border: none;">
+                        <thead>
+                          <tr>
+                            <th>Filing Restriction</th>
+                            <th>Before</th>
+                            <th>After</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Change Schedule</td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="beforeChangeSchedule"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errBeforeChangeSchedule">Input days!</p>
+                            </td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="afterChangeSchedule"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errAfterChangeSchedule">Input days!</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Change Log</td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="beforeChangeLog"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errBeforeChangeLog">Input days!</p>
+                            </td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="afterChangeLog"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errAfterChangeLog">Input days!</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Official Business</td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="beforeOfficialBusiness"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errBeforeOfficialBusiness">Input days!</p>
+                            </td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="afterOfficialBusiness"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errAfterOfficialBusiness">Input days!</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Overtime</td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="beforeOvertime"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errBeforeOvertime">Input days!</p>
+                            </td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="afterOvertime"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errAfterOvertime">Input days!</p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Offset</td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="beforeOffset"
+                                class="form-control" placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errBeforeOffset">Input days!</p>
+                            </td>
+                            <td>
+                              <input type="text" style="width: 50px;" formControlName="afterOffset" class="form-control"
+                                placeholder="0">
+                              <p class="text-danger mt-1" *ngIf="errAfterOffset">Input days!</p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table" style="border-collapse: collapse; border: none;">
+                        <thead>
+                          <tr>
+                            <th>Timekeeping Policy</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Allow Overtime</td>
+                            <td>
+                              <div class="custom-control custom-switch">
+                                <input type="checkbox" formControlName="allowOvertime" class="custom-control-input"
+                                  id="customSwitch1">
+                                <label class="custom-control-label" for="customSwitch1"></label>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                              <div class="form-group">
+                                <label class="form-label">Holiday Based</label>
+                                <ng-select [items]="holidayBased" bindLabel="description" bindValue="id"
+                                  placeholder="Select Holiday Based" formControlName="selectedHolidayBased"
+                                  (change)="showDescription(2)">
+                                </ng-select>
+                                <p class="text-danger mt-1" *ngIf="errHolidayBased">Please select holiday based!</p>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Enable Tardiness</td>
+                            <td>
+                              <div class="custom-control custom-switch">
+                                <input type="checkbox" formControlName="enableTardiness" class="custom-control-input"
+                                  id="customSwitch2">
+                                <label class="custom-control-label" for="customSwitch2"></label>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                  <button class="btn btn-primary" type="button" awNextStep>Continue</button>
+                </div>
+              </aw-wizard-step>
+              <aw-wizard-step stepTitle="Payroll" [awCompletedStep]="complete">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table" style="border-collapse: collapse; border: none;">
+                        <thead>
+                          <tr>
+                            <th>Payroll Policy</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Fixed Salary</td>
+                            <td>
+                              <div class="custom-control custom-switch">
+                                <input type="checkbox" formControlName="fixedSalary" class="custom-control-input"
+                                  id="customSwitch3">
+                                <label class="custom-control-label" for="customSwitch3"></label>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Payroll Rates</label>
+                      <ng-select [items]="payrollRates" bindLabel="description" bindValue="id"
+                        placeholder="Select Holiday Based" formControlName="payrollRates" (change)="showDescription(6)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errPayrollRates">Please select Payroll Rates!</p>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Government Contribution Rates</label>
+                      <ng-select [items]="contributionRates" bindLabel="description" bindValue="id"
+                        placeholder="Select Holiday Based" formControlName="contributionRates"
+                        (change)="showDescription(7)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errContributionRates">Please select Government Contribution
+                        Rates!</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table" style="border-collapse: collapse; border: none;">
+                        <thead>
+                          <tr>
+                            <th>Government Contribution Policy</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Basis for SSS Deduction</label>
+                      <ng-select [items]="deductionBased" bindLabel="description" bindValue="id"
+                        placeholder="Select Holiday Based" formControlName="basisSSS"
+                        (change)="showDescription(3)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errSSSBasis">Please select SSS basis!</p>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Basis for Philhealth Deduction</label>
+                      <ng-select [items]="deductionBased" bindLabel="description" bindValue="id"
+                        placeholder="Select Holiday Based" formControlName="basisPhilhealth"
+                        (change)="showDescription(4)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errPhilhealthBasis">Please select Philhealth basis!
+                      </p>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Basis for Pagibig Deduction</label>
+                      <ng-select [items]="deductionBased" bindLabel="description" bindValue="id"
+                        placeholder="Select Holiday Based" formControlName="basisPagibig"
+                        (change)="showDescription(5)">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errPagibigBasis">Please select Pagibig basis!</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn btn-light mr-2" type="button" awPreviousStep>Back</button>
+                  <button class="btn btn-primary" (click)="submit()" type="button">Submit</button>
+                </div>
+              </aw-wizard-step>
+            </aw-wizard>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
+      <div class="card rounded">
+        <div class="card-body" [perfectScrollbar] style="position: relative; max-height: 500px;">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="card-title mb-0">Summary</h6>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Category Name:</label>
+            <p class="text-muted">{{ categoryForm.value.categoryName }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Description:</label>
+            <p class="text-muted">{{ categoryForm.value.description }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Access Level:</label>
+            <p class="text-muted">{{ categoryForm.value.textAccessLevel }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Approval Group:</label>
+            <p class="text-muted">{{ categoryForm.value.textApprovalGroup }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Allow Overtime:</label>
+            <p *ngIf="categoryForm.value.allowOvertime" class="text-muted">Yes</p>
+            <p *ngIf="!categoryForm.value.allowOvertime" class="text-muted">No</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Holiday Based:</label>
+            <p class="text-muted">{{ categoryForm.value.textHolidayBased }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Payroll Rates:</label>
+            <p class="text-muted">{{ categoryForm.value.textPayrollRates }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Contribution Rates:</label>
+            <p class="text-muted">{{ categoryForm.value.textContributionRates }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">SSS Basis:</label>
+            <p class="text-muted">{{ categoryForm.value.textBasisSSS }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Philhealth Basis:</label>
+            <p class="text-muted">{{ categoryForm.value.textBasisPhilhealth }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Pagibig Basis:</label>
+            <p class="text-muted">{{ categoryForm.value.textBasisPagibig }}</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Enable Tardiness:</label>
+            <p *ngIf="categoryForm.value.enableTardiness" class="text-muted">Yes</p>
+            <p *ngIf="!categoryForm.value.enableTardiness" class="text-muted">No</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Fixed Salary:</label>
+            <p *ngIf="categoryForm.value.fixedSalary" class="text-muted">Yes</p>
+            <p *ngIf="!categoryForm.value.fixedSalary" class="text-muted">No</p>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Change Schedule Filing:</label>
+            <div class="mt-3 d-flex">
+              <p class="text-muted">Before: {{ categoryForm.value.beforeChangeSchedule }}</p>&nbsp;&nbsp;&nbsp;&nbsp;
+              <p class="text-muted">After: {{ categoryForm.value.afterChangeSchedule }}</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Change Log Filing:</label>
+            <div class="mt-3 d-flex">
+              <p class="text-muted">Before: {{ categoryForm.value.beforeChangeLog }}</p>&nbsp;&nbsp;&nbsp;&nbsp;
+              <p class="text-muted">After: {{ categoryForm.value.afterChangeLog }}</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Official Business Filing:</label>
+            <div class="mt-3 d-flex">
+              <p class="text-muted">Before: {{ categoryForm.value.beforeOfficialBusiness }}</p>&nbsp;&nbsp;&nbsp;&nbsp;
+              <p class="text-muted">After: {{ categoryForm.value.afterOfficialBusiness }}</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Overtime Filing:</label>
+            <div class="mt-3 d-flex">
+              <p class="text-muted">Before: {{ categoryForm.value.beforeOvertime }}</p>&nbsp;&nbsp;&nbsp;&nbsp;
+              <p class="text-muted">After: {{ categoryForm.value.afterOvertime }}</p>
+            </div>
+          </div>
+          <div class="mt-3">
+            <label class="tx-11 font-weight-bold mb-0 text-uppercase">Offset Filing:</label>
+            <div class="mt-3 d-flex">
+              <p class="text-muted">Before: {{ categoryForm.value.beforeOffset }}</p>&nbsp;&nbsp;&nbsp;&nbsp;
+              <p class="text-muted">After: {{ categoryForm.value.afterOffset }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

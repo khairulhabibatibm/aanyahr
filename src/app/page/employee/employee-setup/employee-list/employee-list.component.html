@@ -1,0 +1,101 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Employee Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Employee</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Employee</h6>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input class="form-control" [(ngModel)]="searchText" (input)="search($event)"
+                    placeholder="Search here..">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-light btn-icon search" type="button">
+                      <i data-feather="search" appFeatherIcon class="text-secondary"></i>
+                    </button>
+                    <button class="btn btn-outline-light btn-icon list" (click)="changeView()" type="button">
+                      <i data-feather="list" appFeatherIcon class="text-secondary"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav justify-content-end">
+                  <button class="btn btn-primary btn-icon-text" [routerLink]="['/layout/employee/employee-details']">
+                    <i data-feather="edit" appFeatherIcon class="btn-icon-prepend"></i> Add Employee
+                  </button>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <br>
+          <div class="row animate__animated animate__fadeInUp" *ngIf="isTable">
+            <div class=col-md-3 *ngFor="let x of employeeFetch; let i = index">
+              <div class="card">
+                <img src="{{image + x.image_path}}" class="card-img-top" alt="...">
+                <div class="card-body text-center">
+                  <h5 class="card-title">{{ x.display_name }}</h5>
+                  <p class="card-text">{{ x.occupation }}</p>
+                  <p class="card-text">{{ x.employeestatus }}</p>
+                  <button (click)="viewEmployee(x.employee_id)" class="btn btn-primary mt-2">View</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row animate__animated animate__fadeInUp" *ngIf="!isTable">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table datatable #myTable class="row-border hover">
+                  <thead>
+                    <tr>
+                      <th>Employee Code</th>
+                      <th>Employee Name</th>
+                      <th>Occupation</th>
+                      <th>Status</th>
+                      <th>Date Hired</th>
+                      <th>Created By</th>
+                      <th>Date Created</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of employeeList; let i = index">
+                      <td>{{x.employee_code}}</td>
+                      <td>{{x.display_name}}</td>
+                      <td>{{x.occupation}}</td>
+                      <td>{{x.employeestatus}}</td>
+                      <td>{{x.date_hired}}</td>
+                      <td>{{x.created_by}}</td>
+                      <td>{{x.date_created}}</td>
+                      <td>
+                        <button type="button" (click)="viewEmployee(x.employee_id)" title="View"
+                          class="btn btn-sm btn-primary btn-icon">
+                          <i class="feather icon-edit"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

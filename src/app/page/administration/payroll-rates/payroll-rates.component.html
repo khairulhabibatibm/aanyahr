@@ -1,0 +1,78 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Payroll Rates</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Payroll Rates</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <form [formGroup]="rateForm">
+            <div class="row">
+              <div class="col-lg-3 email-aside border-lg-right">
+                <div class="aside-content">
+                  <div class="form-group">
+                    <label class="control-label">Rate Group</label>
+                    <ng-select [items]="groupList" name="Rate Group" bindLabel="description" bindValue="id"
+                      placeholder="Select Rate Group" formControlName="selectedRateGroup" (change)="selectGroup()">
+                    </ng-select>
+                  </div>
+                </div>
+                <ul class="nav justify-content-end">
+                  <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                    <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+                  </button>
+                  <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+                  html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+                  showCloseButton: true,
+                  showCancelButton: true,
+                  focusConfirm: false,
+                  confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+                  confirmButtonAriaLabel: 'Thumbs up, great!',
+                  cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+                  cancelButtonAriaLabel: 'Thumbs down'
+                }" class="btn btn-primary">
+                  </button>
+                </ul>
+              </div>
+              <div class="col-lg-9 email-content">
+                <div class="table-responsive">
+                  <table id="dataTableExample" class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Description</th>
+                        <th>Rates %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of rateList; let i = index">
+                        <td>{{x.description}}</td>
+                        <td>
+                          <input type="text" class="form-control" (change)="changeRate(i, $event)"
+                            value="{{x.rates | number : '1.4-4'}}" placeholder="0">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

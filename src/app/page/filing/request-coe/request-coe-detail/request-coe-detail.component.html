@@ -1,0 +1,117 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Filing</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/filing/request-coe-view">CoE Request</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <form [formGroup]="coeForm">
+  <div class="row">
+    <div class="col-md-12 grid-margin">
+      <div class="card">
+          <div class="card-body">
+            <h6 class="card-title">CoE Request</h6>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="control-label">Reason</label>
+                      <input type="text" formControlName="reason" class="form-control" placeholder="Reason">  
+                      <p class="text-danger mt-1" *ngIf="errReason">Reason is needed!</p>                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="form-group">
+                  <label class="control-label"> &nbsp; </label>
+                  <div class="form-group">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" formControlName="withpay" class="form-check-input" name="withpay" id="withpay" [value]="false">
+                        <i class="input-frame"></i>
+                        Without Salary
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" formControlName="withpay" class="form-check-input" name="withpay" id="withpay" [value]="true">
+                        <i class="input-frame"></i>
+                        With Salary
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <div class="form-group">
+                  <label class="control-label">Purpose</label>
+                  <ng-select [items]="purpose" formControlName="selectedPurpose"
+                    bindLabel="description" bindValue="id" placeholder="Select Purpose">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errPurpose">Purpose is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <div class="container" *ngIf="isLink">
+                  <div class="row icons-list">
+                    <div class="col-sm-6">
+                      <div class="w-100">
+                        <div class="d-flex justify-content-between">
+                          <h6 class="text-body mb-2"><a [href]="coeForm.value.coe_path" target="_blank"><i
+                                class="mdi mdi-file-pdf-outline"></i>{{coeForm.value.purpose}}</a></h6>
+                          <p class="text-muted tx-12"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div class="card-footer" *ngIf="!isView">
+          <ul class="nav justify-content-end">
+            <button *ngIf="isCancel" class="btn btn-warning btn-icon-text" (click)="cancel()">
+              <i data-feather="rotate-cw" appFeatherIcon class="btn-icon-prepend"></i> Cancel
+            </button> &nbsp;
+            <button *ngIf="isSubmit" class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+<!-- <ng-template #cancelModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Cancellation</h5>
+    <button type="button" class="close" (click)="modal.close('by: close icon')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="control-label">Reason</label>
+          <textarea type="text" rows="3" [(ngModel)]="remarks" class="form-control" placeholder="Reason"></textarea>
+          <p class="text-danger mt-1" *ngIf="errCancelReason">Reason is needed!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-warning" (click)="cancelTransaction()">Cancel</button>
+  </div>
+</ng-template> -->

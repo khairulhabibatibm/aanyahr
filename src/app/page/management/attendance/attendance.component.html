@@ -1,0 +1,152 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Management</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Employee Attendance</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Employee Attendance</h6>
+              </div>
+            </div>
+            <hr>
+          </div>
+          <form [formGroup]="attendanceForm">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Date From</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateFrom"
+                    value="dateFrom" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                      <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Date To</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateTo"
+                    (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="dt.toggle()">
+                      <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="control-label">Employee</label>
+                <ng-select [items]="employeeList" name="Employee" bindLabel="display_name" bindValue="encrypt_employee_id"
+                  placeholder="Select Employee" formControlName="selectedEmployee">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="control-label">Missing Logs Only?</label>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" formControlName="missingLogs" id="customSwitch1">
+                  <label class="custom-control-label" for="customSwitch1"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-right">
+                <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
+                <button type="button" *ngIf="!isSearch" class="btn btn-primary btn-icon-text" (click)="search()">
+                  <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i>
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" id="dataTableExample" class="table">
+                  <thead>
+                    <tr>
+                      <th>EMPLOYEE CODE</th>
+                      <th>EMPLOYEE</th>
+                      <th>DATE</th>
+                      <th>RESTDAY</th>
+                      <th>SCHEDULE IN</th>
+                      <th>SCHEDULE OUT</th>
+                      <th>TIME IN</th>
+                      <th>TIME OUT</th>
+                      <th>RG</th>
+                      <th>TARDY</th>
+                      <th>UT</th>
+                      <th>ABSNT</th>
+                      <th>LWOP</th>
+                      <th>VL</th>
+                      <th>SL</th>
+                      <th>OTLV</th>
+                      <th>ND</th>
+                      <th>RGOT</th>
+                      <th>RGOTND</th>
+                      <th>LHOT</th>
+                      <th>LHOTND</th>
+                      <th>LHOT>8</th>
+                      <th>LHOTND>8</th>
+                      <th>LHRD</th>
+                      <th>LHRDND</th>
+                      <th>LHRD>8</th>
+                      <th>LHRDND>8</th>
+                      <th>SHOT</th>
+                      <th>SHOTND</th>
+                      <th>SHOT>8</th>
+                      <th>SHOTND>8</th>
+                      <th>SHRD</th>
+                      <th>SHRDND</th>
+                      <th>SHRD>8</th>
+                      <th>SHRDND>8</th>
+                      <th>RDOT</th>
+                      <th>RDOTND</th>
+                      <th>RDOT>8</th>
+                      <th>RDOTND>8</th>
+                      <th>DHOT</th>
+                      <th>DHOTND</th>
+                      <th>DHOT>8</th>
+                      <th>DHOTND>8</th>
+                      <th>DHRD</th>
+                      <th>DHRDND</th>
+                      <th>DHRD>8</th>
+                      <th>DHRDND>8</th>
+                      <th>REMARKS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

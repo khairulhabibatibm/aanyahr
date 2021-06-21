@@ -1,0 +1,98 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Module Access</li>
+    </ol>
+  </nav>
+  <form [formGroup]="moduleAccessForm">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6>Module Access</h6>
+                </div>
+              </div>
+
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-lg-3 email-aside border-lg-right">
+                <div class="aside-content">
+                  <div class="form-group">
+                    <label class="control-label">Module</label>
+                    <ng-select [items]="moduleType" name="industry" bindLabel="description" bindValue="id"
+                      placeholder="Select Module" formControlName="selectedModule" (change)="onChange()">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="aside-content">
+                  <div class="form-group">
+                    <label class="control-label">Access Type</label>
+                    <ng-select [items]="accessType" name="industry" bindLabel="description" bindValue="id"
+                      placeholder="Select Access type" formControlName="selectedAccess" (change)="onChange()">
+                    </ng-select>
+                  </div>
+                </div>
+                <ul class="nav justify-content-end">
+                  <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                    <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+                  </button>
+                  <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+                html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+                confirmButtonAriaLabel: 'Thumbs up, great!',
+                cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+                cancelButtonAriaLabel: 'Thumbs down'
+              }" class="btn btn-primary">
+                  </button>
+                </ul>
+              </div>
+              <div class="col-lg-9 email-content">
+                <div class="table-responsive">
+                  <table id="dataTableExample" class="table">
+                    <thead>
+                      <tr>
+                        <th>Module Name</th>
+                        <th>Active</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let x of table; let i = index">
+                        <td>{{x.description}}</td>
+                        <td>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="checkbox" checked='{{x.active === true? "true" : "" }}'
+                                (change)="checkChange($event)" value="{{x.param_id}}" class="form-check-input">
+                              <i class="input-frame"></i>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

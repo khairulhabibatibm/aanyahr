@@ -1,0 +1,601 @@
+<div class="spinner-wrapper full-screen" *ngIf="loader">
+  <div class="spinner"></div>
+</div>
+<div class="row w-100 mx-0 auth-page">
+  <div class="col-md-12 col-xl-10 mx-auto">
+    <div class="card">
+      <div class="row">
+        <div class="col-md-12 pl-md-0">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title">{{Title}}</h6>
+
+                  <aw-wizard #wizardForm>
+                    <aw-wizard-step stepTitle="step 1">
+                      <form [formGroup]="companyForm">
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="exampleInputUsername1">Company Name</label>
+                                  <input type="text" class="form-control" formControlName="companyName"
+                                    autocomplete="off" placeholder="Company Name">
+                                  <p class="text-danger mt-1" *ngIf="errCompanyName">Company Name is needed!</p>
+                                </div>
+                                <div class="form-group">
+                                  <label>Upload Logo</label>
+                                  <input (change)="handleFileInput($event)" accept=".png, .jpg, .jpeg" type="file"
+                                    name="img[]" class="file-upload-default" id="fileUploadInputExample">
+                                  <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+                                    <input type="text" class="form-control file-upload-info" disabled=""
+                                      placeholder="Upload Image">
+                                    <span class="input-group-append">
+                                      <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="exampleInputUsername1">Company Code</label>
+                                  <input type="text" class="form-control" formControlName="companyCode"
+                                    autocomplete="off" placeholder="Company Code">
+                                  <p class="text-danger mt-1" *ngIf="errCompanyCode">Company Code is needed!</p>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="media d-block d-sm-flex">
+                                  <img [src]="url" height="150" width="width" src="https://via.placeholder.com/200x150"
+                                    alt="...">
+                                </div>
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="card-title">
+                              <h6>Address</h6>
+                            </div>
+                            <div class="row">
+                              <div class="col-sm-2">
+                                <div class="form-group">
+                                  <label class="control-label">Zip Code</label>
+                                  <input type="text" formControlName="zipCode" class="form-control"
+                                    placeholder="Zip Code">
+                                  <p class="text-danger mt-1" *ngIf="errZipCode">Zip Code is needed!</p>
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-1">
+                                <div class="form-group">
+                                  <label class="control-label">Unit/Flr #</label>
+                                  <input type="text" formControlName="unit" class="form-control"
+                                    placeholder="Unit/Flr #">
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Building</label>
+                                  <input type="text" formControlName="building" class="form-control"
+                                    placeholder="Building">
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Street</label>
+                                  <input type="text" formControlName="street" class="form-control" placeholder="Street">
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Barangay</label>
+                                  <input type="text" formControlName="barangay" class="form-control"
+                                    placeholder="Barangay">
+                                </div>
+                              </div><!-- Col -->
+                            </div><!-- Row -->
+                            <div class="row">
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Region</label>
+                                  <ng-select [items]="region" name="Country" bindLabel="description" bindValue="id"
+                                    placeholder="Select Region" formControlName="selectedRegion"
+                                    (change)="selectRegion()">
+                                  </ng-select>
+                                  <p class="text-danger mt-1" *ngIf="errRegion">Region is needed!</p>
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Province</label>
+                                  <ng-select [items]="province" name="Province" bindLabel="description" bindValue="id"
+                                    placeholder="Select Province" formControlName="selectedProvince">
+                                  </ng-select>
+                                  <p class="text-danger mt-1" *ngIf="errProvince">Province is needed!</p>
+                                </div>
+                              </div><!-- Col -->
+                             
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">City</label>
+                                  <ng-select [items]="companyCity" name="Country" bindLabel="to_description"
+                                    bindValue="to_id" placeholder="Select City" formControlName="selectedCity">
+                                  </ng-select>
+                                  <p class="text-danger mt-1" *ngIf="errCity">City is needed!</p>
+                                </div>
+                              </div><!-- Col -->
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <label class="control-label">Country</label>
+                                  <ng-select [items]="country" name="Country" bindLabel="description" bindValue="id"
+                                    placeholder="Select Country" formControlName="selectedCompanyCountry">
+                                  </ng-select>
+                                  <p class="text-danger mt-1" *ngIf="errCountry">Country is needed!</p>
+                                </div>
+                              </div><!-- Col -->
+                            </div><!-- Row -->
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-2">
+                          <button type="button" class="btn btn-secondary mr-2" (click)="reLogin()">Re-Login</button>
+                          <button class="btn btn-primary" type="button" (click)="nextStep(1)">Continue</button>
+                        </div>
+                      </form>
+                    </aw-wizard-step>
+
+                    <aw-wizard-step stepTitle="step 2">
+                      <ng-template #xlModal let-modal>
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Branch Details</h5>
+                          <button type="button" class="close" #closeModal (click)="modal.close('by: close icon')"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form [formGroup]="branchForm">
+                            <div class="card">
+                              <div class="card-body">
+                                <h6 class="card-title">Branch Information</h6>
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Branch Name</label>
+                                      <input type="text" formControlName="branchName" class="form-control"
+                                        placeholder="Branch Name">
+                                      <p class="text-danger mt-1" *ngIf="errbranchName">Branch Name is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Industry</label>
+                                      <ng-select [items]="industry" name="Industry" bindLabel="description"
+                                        bindValue="id" placeholder="Select Industry" formControlName="selectedIndustry">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errselectedIndustry">Industry is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Bank</label>
+                                      <ng-select [items]="bank" name="Bank" bindLabel="description" bindValue="id"
+                                        placeholder="Select Bank" formControlName="selectedBank">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errselectedBank">Bank is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Bank Account</label>
+                                      <input type="text" formControlName="bankAccount" class="form-control"
+                                        placeholder="Bank Account">
+                                      <p class="text-danger mt-1" *ngIf="errbankAccount">Bank is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="card-title">Branch Address</div>
+                                <div class="row">
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">Zip Code</label>
+                                      <input type="text" formControlName="zipCode" class="form-control"
+                                        placeholder="Zip Code">
+                                      <p class="text-danger mt-1" *ngIf="errBranchZipCode">Zip Code is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-1">
+                                    <div class="form-group">
+                                      <label class="control-label">Unit/Flr #</label>
+                                      <input type="text" formControlName="unit" class="form-control"
+                                        placeholder="Unit/Flr #">
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">Building</label>
+                                      <input type="text" formControlName="building" class="form-control"
+                                        placeholder="Unit/Flr #">
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">Street</label>
+                                      <input type="text" formControlName="street" class="form-control"
+                                        placeholder="Enter zip code">
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">Barangay</label>
+                                      <input type="text" formControlName="barangay" class="form-control"
+                                        placeholder="Barangay">
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                                <div class="col-sm-3">
+                                  <div class="form-group">
+                                    <label class="control-label">Region</label>
+                                    <ng-select [items]="region" name="Country" bindLabel="description" bindValue="id"
+                                      placeholder="Select Country" formControlName="selectedRegion"
+                                      (change)="selectBranchRegion()">
+                                    </ng-select>
+                                    <p class="text-danger mt-1" *ngIf="errBranchRegion">Region is needed!</p>
+                                  </div>
+                                </div><!-- Col -->
+                                <div class="row">
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">Province</label>
+                                      <ng-select [items]="province" name="Province" bindLabel="description"
+                                        bindValue="id" placeholder="Select Province" formControlName="selectedProvince">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errBranchProvince">Province is needed!</p>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">City</label>
+                                      <ng-select [items]="branchCity" name="Country" bindLabel="to_description"
+                                        bindValue="to_id" placeholder="Select Country" formControlName="selectedCity">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errBranchCity">City is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-3">
+                                    <div class="form-group">
+                                      <label class="control-label">Country</label>
+                                      <ng-select [items]="country" name="Country" bindLabel="description" bindValue="id"
+                                        placeholder="Select Country" formControlName="selectedBranchCountry">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errBranchCountry">Country is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="card-title">Government Information</div>
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">SSS</label>
+                                      <input class="form-control mb-4 mb-md-0" formControlName="sss" mask="00-0000000-0"
+                                        [showMaskTyped]="true" />
+                                      <p class="text-danger mt-1" *ngIf="errSSS">SSS is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Philhealth</label>
+                                      <input type="text" class="form-control" formControlName="philhealth"
+                                        mask="00-000000000-0" [showMaskTyped]="true" placeholder="Philhealth">
+                                      <p class="text-danger mt-1" *ngIf="errPhilhealth">Philhealth is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">TIN</label>
+                                      <input type="text" class="form-control" formControlName="tin"
+                                        mask="000-000-000-000" [showMaskTyped]="true" placeholder="TIN"
+                                        placeholder="TIN">
+                                      <p class="text-danger mt-1" *ngIf="errTIN">TIN is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-6">
+                                    <div class="form-group">
+                                      <label class="control-label">Pagibig</label>
+                                      <input type="text" class="form-control" formControlName="pagibig"
+                                        mask="0000-0000-0000" [showMaskTyped]="true" placeholder="Pagibig">
+                                      <p class="text-danger mt-1" *ngIf="errPagibig">Pagibig is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div>
+                                <div class="row">
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">RDO</label>
+                                      <ng-select [items]="rdoOffice" name="RDO Office" bindLabel="description"
+                                        bindValue="id" placeholder="Select RDO Office"
+                                        formControlName="selectedRdoOffice" (change)="selectRdoOffice()">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errRDO">RDO is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-4">
+                                    <div class="form-group">
+                                      <label class="control-label">&nbsp;</label>
+                                      <ng-select [items]="rdoBranch" name="RDO Branch" bindLabel="description"
+                                        bindValue="id" placeholder="Select RDO Branch"
+                                        formControlName="selectedRdoBranch" (change)="selectRdoBranch()">
+                                      </ng-select>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">Branch</label>
+                                      <ng-select [items]="pRegion" name="Branch" bindLabel="description" bindValue="id"
+                                        placeholder="Select Branch" formControlName="selectedPRegion"
+                                        (change)="selectPBranch()">
+                                      </ng-select>
+                                      <p class="text-danger mt-1" *ngIf="errBranch">Branch is needed!</p>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">&nbsp;</label>
+                                      <ng-select [items]="pCity" name="Branch" bindLabel="to_description"
+                                        bindValue="to_id" placeholder="Select City" formControlName="selectedPCity"
+                                        (change)="selectPCity()">
+                                      </ng-select>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">&nbsp;</label>
+                                      <input type="text" formControlName="selectedPCode" class="form-control"
+                                        placeholder="Code">
+                                    </div>
+                                  </div><!-- Col -->
+                                </div><!-- Row -->
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="card-title">Contact Information</div>
+                                <div class="row">
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">Phone</label>
+                                      <ng-select [items]="phone" name="Bank" bindLabel="description" bindValue="id"
+                                        placeholder="Select Type" formControlName="selectedPhone">
+                                      </ng-select>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-4">
+                                    <div class="form-group">
+                                      <label class="control-label">Number</label>
+                                      <div class="row">
+                                        <div class="col-md-10">
+                                          <input type="text" formControlName="phoneNumber" class="form-control"
+                                            placeholder="Number">
+                                        </div>
+                                        <div class="col-md-2">
+                                          <button type="button" (click)="addPhone($event)" title="Add"
+                                            class="btn btn-sm btn-primary btn-icon">
+                                            <i class="feather icon-plus"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-2">
+                                    <div class="form-group">
+                                      <label class="control-label">Email</label>
+                                      <ng-select [items]="email" name="Bank" bindLabel="description" bindValue="id"
+                                        placeholder="Select Type" formControlName="selectedEmail">
+                                      </ng-select>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-sm-4">
+                                    <div class="form-group">
+                                      <label class="control-label">Address</label>
+                                      <div class="row">
+                                        <div class="col-md-10">
+                                          <input type="text" formControlName="emailAddress" class="form-control"
+                                            placeholder="@illimitado.com">
+                                        </div>
+                                        <div class="col-md-2">
+                                          <button type="button" (click)="addEmail($event)" title="Add"
+                                            class="btn btn-sm btn-primary btn-icon">
+                                            <i class="feather icon-plus"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div><!-- Col -->
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th>Type</th>
+                                            <th>Number</th>
+                                            <th></th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let x of phoneList; let i = index">
+                                            <td>{{x.description}}</td>
+                                            <td>{{x.number}}</td>
+                                            <td>
+                                              <button type="button" (click)="removePhone(i)" title="Remove"
+                                                class="btn btn-sm btn-danger btn-icon">
+                                                <i class="feather icon-trash"></i>
+                                              </button>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th>Type</th>
+                                            <th>Address</th>
+                                            <th></th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let x of emailList; let i = index">
+                                            <td>{{x.description}}</td>
+                                            <td>{{x.email_address}}</td>
+                                            <td> <button type="button" (click)="removeEmail(i)" title="Remove"
+                                                class="btn btn-sm btn-danger btn-icon">
+                                                <i class="feather icon-trash"></i>
+                                              </button> </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                      <label class="control-label">IP Address</label>
+                                      <div class="row">
+                                        <div class="col-md-10">
+                                          <input type="text" formControlName="ipAddress" class="form-control">
+                                        </div>
+                                        <div class="col-md-2">
+                                          <button type="button" (click)="addIP($event)" title="Add"
+                                            class="btn btn-sm btn-primary btn-icon">
+                                            <i class="feather icon-plus"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div><!-- Col -->
+                                  <div class="col-md-3">
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th>IP</th>
+                                            <th></th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let x of ipList; let i = index">
+                                            <td>{{x.description}}</td>
+                                            <td> <button type="button" (click)="removeIP(i)" title="Remove"
+                                                class="btn btn-sm btn-danger btn-icon">
+                                                <i class="feather icon-trash"></i>
+                                              </button> </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary"
+                            (click)="modal.close('by: close button')">Close</button>
+                          <button type="button" class="btn btn-primary" (click)="addBranch()">Save changes</button>
+                        </div>
+                      </ng-template>
+                      <div class="table-responsive pt-3">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr style="width: 5%;">
+                              <th>
+                                <button type="button" title="Add" (click)="openXlModal(xlModal)"
+                                  class="btn btn-sm btn-primary btn-icon">
+                                  <i class="feather icon-plus"></i>
+                                </button>
+                              </th>
+                              <th style="width: 45%;">Branch Name</th>
+                              <th style="width: 45%;">Industry</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let x of branchList; let i = index">
+                              <td>
+                                <button type="button" (click)="removeBranch(i)" title="Remove"
+                                  class="btn btn-sm btn-danger btn-icon">
+                                  <i class="feather icon-trash"></i>
+                                </button>
+                              </td>
+                              <td>{{x.branchName}}</td>
+                              <td>{{x.industry}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p class="text-danger mt-1" *ngIf="errBranchList">Please add atleast one branch!</p>
+                      </div>
+                      <div class="d-flex justify-content-center mt-2">
+                        <button class="btn btn-light mr-2" type="button" (click)="prevStep()">Back</button>
+                        <!-- <button class="btn btn-primary" type="button" (click)="nextStep(3)">Continue</button> -->
+                        <button class="btn btn-primary btn-icon-text" (click)="submit($event)">
+                          <i data-feather="save" class="btn-icon-prepend"></i> {{submitText}}
+                        </button>
+                        <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+                          html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+                          showCloseButton: true,
+                          showCancelButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+                          confirmButtonAriaLabel: 'Thumbs up, great!',
+                          cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+                          cancelButtonAriaLabel: 'Thumbs down'
+                        }" class="btn btn-primary">
+                          {{submitText}}
+                        </button>
+                      </div>
+                    </aw-wizard-step>
+
+                    <aw-wizard-step stepTitle="finish">
+                      <div class="text-center">
+                        <i data-feather="check-circle" appFeatherIcon class="text-success mt-4 mb-2 icon-xxl"></i>
+                        <h3 class="text-muted mb-3">Thank you !</h3>
+                        <p class="w-75 mx-auto mb-4 text-muted">We are excited to tell you that you are now part of a
+                          powerful HCM system. Please login to proceed to our system.</p>
+                      </div>
+                      <div class="d-flex justify-content-center mt-2">
+                        <button class="btn btn-light mr-2" type="button" (click)="prevStep()">Back</button>
+                        <button class="btn btn-primary" type="button" (click)="finishFunction()">Login</button>
+                      </div>
+                    </aw-wizard-step>
+                  </aw-wizard>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

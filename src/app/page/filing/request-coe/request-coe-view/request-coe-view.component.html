@@ -1,0 +1,67 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Filing</a></li>
+      <li class="breadcrumb-item active" aria-current="page">CoE Request</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>CoE Request</h6>
+              </div>
+              <div class="col-md-6">
+                <ul class="nav justify-content-end">
+                  <button class="btn btn-primary btn-icon-text" [routerLink]="['/layout/filing/request-coe-detail']">
+                    <i data-feather="edit" appFeatherIcon class="btn-icon-prepend"></i> Request CoE
+                  </button>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+              <thead>
+                <tr>
+                  <th>CoE Code</th>
+                  <th>Reason</th>
+                  <th>Purpose</th>
+                  <th>With Salary</th>
+                  <th>Status</th>
+                  <th>Created By</th>
+                  <th>Date Created</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let x of table; let i = index">
+                  <td>{{x.coe_code}}</td>
+                  <td>{{x.reason}}</td>
+                  <td>{{x.purpose}}</td>
+                  <td>{{x.with_pay === true ? 'Yes' : 'No'}}</td>
+                  <td>{{x.status}}</td>
+                  <td>{{x.created_desc}}</td>
+                  <td>{{x.date_created}}</td>
+                  <td>
+                    <button type="button" title="Edit" (click)="viewCoE(x.encrypted_coe_id)"
+                      class="btn btn-sm btn-primary btn-icon">
+                      <i class="feather icon-edit-2"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/administration/holiday-view">Holiday</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>Holiday</h6>
+          </div>
+          <form [formGroup]="headerForm">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Name</label>
+                  <input type="text" formControlName="name" class="form-control" placeholder="Name">
+                  <p class="text-danger mt-1" *ngIf="errName">Please input name!</p>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label class="control-label">Branch</label>
+                  <ng-select [items]="branch" [multiple]=true bindLabel="branch_name" bindValue="branch_id"
+                    placeholder="Select Branch" (change)="selectAll()" formControlName="selectedBranch">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errBranch">Please select atleast one branch!</p>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <input type="text" formControlName="description" class="form-control" placeholder="Description">
+                  <p class="text-danger mt-1" *ngIf="errDescription">Please input description!</p>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <form [formGroup]="holidayForm">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Holiday Name</label>
+                  <input type="text" formControlName="holidayName" class="form-control" placeholder="Holiday Name">
+                  <p class="text-danger mt-1" *ngIf="errHolidayName">Please input holiday name!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Holiday Type</label>
+                  <ng-select [items]="holidayType" name="Holiday" bindLabel="description" bindValue="id"
+                    placeholder="Select Holiday Type" formControlName="selectedHolidayType">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errHolidayType">Please input holiday type!</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="control-label">Date</label>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="selectedDate"
+                            (dateSelect)="onDateSelect($event)" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-light btn-icon calendar" type="button" (click)="d.toggle()">
+                              <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="text-danger mt-1" *ngIf="errYear">Please input year!</p>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" (click)="addHoliday()" class="btn btn-primary btn-icon">
+                        <i class="feather icon-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row">
+            <p class="text-danger mt-1" *ngIf="errHolidayList">Please add atleast one holiday!</p>
+            <div class="table-responsive">
+              <table id="dataTableExample" class="table">
+                <thead>
+                  <tr>
+                    <th>Holiday Name</th>
+                    <th>Holiday Type</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let x of holidayList; let i = index">
+                    <td>{{x.holiday_name}}</td>
+                    <td>{{x.holidayTypeDesc}}</td>
+                    <td>{{x.holiday_date}}</td>
+                    <td>
+                      <button type="button" (click)="removeHoliday(i)" title="Remove"
+                        class="btn btn-sm btn-danger btn-icon">
+                        <i class="feather icon-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Holiday
+            </button>
+            <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+            html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+            cancelButtonAriaLabel: 'Thumbs down'
+          }" class="btn btn-primary">
+              Click here!
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

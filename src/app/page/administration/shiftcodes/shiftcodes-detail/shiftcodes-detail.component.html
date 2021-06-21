@@ -1,0 +1,349 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/administration/shiftcodes-view">Shift Codes</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>Shift Codes</h6>
+          </div>
+          <form [formGroup]="shiftForm">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Shift Name</label>
+                  <input type="text" formControlName="shiftName" class="form-control" placeholder="Shift Name">
+                  <p class="text-danger mt-1" *ngIf="errShiftName">Please input shift name!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Grace Period</label>
+                  <input type="text" formControlName="gracePeriod" class="form-control" placeholder="Grace Period">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <input type="text" formControlName="description" class="form-control" placeholder="Description">
+                  <p class="text-danger mt-1" *ngIf="errDescription">Please input description!</p>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">&nbsp;</label>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="checkbox" formControlName="isFlexi" (change)="onFlexi($event)"
+                        class="form-check-input">
+                      <i class="input-frame"></i>
+                      Is Flexi?
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Time In</label>
+                  <ng-template #popTimeIn>
+                    <timepicker (ngModelChange)="setTimeIn($event)" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="timeIn" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="timeIn" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popTimeIn" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errTimeIn">Please input time in!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Time Out</label>
+                  <ng-template #popTimeOut>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setTimeOut($event)"
+                      [(ngModel)]="timeOut" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="timeOut" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popTimeOut" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errTimeOut">Please input time out!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="daysCover" (change)="computeDateDiff()" class="form-control"
+                    placeholder="Days Cover">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Total Working Hr(s)</label>
+                  <input type="text" formControlName="workingHrs" class="form-control"
+                    placeholder="Total Working Hr(s)">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Halfday In</label>
+                  <ng-template #popHalfDayIn>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setHalfDayIn($event)"
+                      [(ngModel)]="halfDayIn" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="halfDayIn" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popHalfDayIn" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errHalfDayIn">Please input halfday in!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="halfDayInDays" class="form-control" placeholder="Days Cover">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Halfday Out</label>
+                  <ng-template #popHalfDayOut>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setHalfDayOut($event)"
+                      [(ngModel)]="halfDayOut" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="halfDayOut" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popHalfDayOut" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errHalfDayOut">Please input halfday out!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="halfDayOutDays" class="form-control" placeholder="Days Cover">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Nighdiff In</label>
+                  <ng-template #popNightDiffIn>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setNightDiffIn($event)"
+                      [(ngModel)]="nightDiffIn" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="nightDiffIn" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popNightDiffIn" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errNightDiffIn">Please input night diff in!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="nightDiffInDays" class="form-control" placeholder="Days Cover">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Nighdiff Out</label>
+                  <ng-template #popNightDiffOut>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setNightDiffOut($event)"
+                      [(ngModel)]="nightDiffOut" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="nightDiffOut" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popNightDiffOut" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="errNightDiffOut">Please input night diff out!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="nightDiffOutDays" class="form-control" placeholder="Days Cover">
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="card-title">
+              <h6>Restday</h6>
+            </div>
+            <div class="row">
+              <div class="table-responsive">
+                <table id="dataTableExample" class="table">
+                  <thead>
+                    <tr>
+                      <th>Sunday</th>
+                      <th>Monday</th>
+                      <th>Tuesday</th>
+                      <th>Wednesday</th>
+                      <th>Thursday</th>
+                      <th>Friday</th>
+                      <th>Saturday</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_sun" type="checkbox" class="custom-control-input" id="cksunday">
+                          <label class="custom-control-label" for="cksunday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_mon" type="checkbox" class="custom-control-input" id="ckmonday">
+                          <label class="custom-control-label" for="ckmonday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_tue" type="checkbox" class="custom-control-input"
+                            id="cktuesday">
+                          <label class="custom-control-label" for="cktuesday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_wed" type="checkbox" class="custom-control-input"
+                            id="ckwednesday">
+                          <label class="custom-control-label" for="ckwednesday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_thu" type="checkbox" class="custom-control-input"
+                            id="ckthursday">
+                          <label class="custom-control-label" for="ckthursday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_fri" type="checkbox" class="custom-control-input" id="ckfriday">
+                          <label class="custom-control-label" for="ckfriday"></label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-switch">
+                          <input formControlName="is_rd_sat" type="checkbox" class="custom-control-input"
+                            id="cksaturday">
+                          <label class="custom-control-label" for="cksaturday"></label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <hr>
+          </form>
+          <form [formGroup]="breakForm">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">Time In</label>
+                  <ng-template #popBreakIn>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setBreakIn($event)"
+                      [(ngModel)]="BreakIn" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="BreakIn" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popBreakIn" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="isBreakIn">Input Break In!</p>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <input type="text" formControlName="breakInDays" class="form-control" placeholder="Days Cover">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label class="control-label">Time Out</label>
+                  <ng-template #popBreakOut>
+                    <timepicker [ngModelOptions]="{standalone: true}" (ngModelChange)="setBreakOut($event)"
+                      [(ngModel)]="BreakOut" [showMeridian]="true"></timepicker>
+                  </ng-template>
+                  <input type="text" formControlName="BreakOut" class="form-control" placeholder="HH:MM AM/PM"
+                    [popover]="popBreakOut" [outsideClick]="true" placement="bottom" />
+                  <p class="text-danger mt-1" *ngIf="isBreakOut">Input Break Out!</p>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label class="control-label">Days Cover</label>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <input type="text" formControlName="breakOutDays" class="form-control" placeholder="Days Cover">
+                    </div>
+                    <div class="col-md-4">
+                      <button type="button" title="Add" (click)="addBreak()" class="btn btn-sm btn-primary btn-icon">
+                        <i class="feather icon-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <p class="text-danger mt-1" *ngIf="isBreak">Breaks can only accommodate up to three breaks!</p>
+              <div class="table-responsive">
+                <table id="dataTableExample" class="table">
+                  <thead>
+                    <tr>
+                      <th>Break Type</th>
+                      <th>Break In</th>
+                      <th>Days Cover</th>
+                      <th>Break Out</th>
+                      <th>Days Cover</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of break; let i = index">
+                      <td>{{x.breakType}}</td>
+                      <td>{{x.breakIn}}</td>
+                      <td>{{x.breakInDays}}</td>
+                      <td>{{x.breakOut}}</td>
+                      <td>{{x.breakOutDays}}</td>
+                      <td>
+                        <button type="button" (click)="removeBreak(i)" title="Remove"
+                          class="btn btn-sm btn-danger btn-icon">
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Shift Code
+            </button>
+            <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+            html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+            confirmButtonAriaLabel: 'Thumbs up, great!',
+            cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+            cancelButtonAriaLabel: 'Thumbs down'
+          }" class="btn btn-primary">
+              Click here!
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

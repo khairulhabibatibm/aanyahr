@@ -1,0 +1,179 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Company</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h6>Company</h6>
+          </div>
+          <form [formGroup]="companyForm">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="exampleInputUsername1">Company Name</label>
+                      <input type="text" class="form-control" formControlName="companyName" autocomplete="off"
+                        placeholder="Company Name">
+                      <p class="text-danger mt-1" *ngIf="errCompanyName">Company Name is needed!</p>
+                    </div>
+                    <div class="form-group">
+                      <label>File upload</label>
+                      <input (change)="handleFileInput($event)" accept=".png, .jpg, .jpeg" type="file" name="img[]"
+                        class="file-upload-default" id="fileUploadInputExample">
+                      <div class="input-group col-xs-12" (click)="openFileBrowser($event)">
+                        <input type="text" class="form-control file-upload-info" disabled="" placeholder="Upload Image">
+                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputUsername1">Company Code</label>
+                      <input type="text" class="form-control" formControlName="companyCode" autocomplete="off"
+                        placeholder="Company Code">
+                      <p class="text-danger mt-1" *ngIf="errCompanyCode">Company Code is needed!</p>
+                    </div>
+                   
+                  </div>
+                  <div class="col-md-6">
+                    <div class="media d-block d-sm-flex">
+                      <img [src]="url" height="150" width="width" src="https://via.placeholder.com/200x150" alt="...">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="exampleInputUsername1">Series Code</label>
+                      <input type="text" class="form-control" formControlName="seriesCode" autocomplete="off"
+                        placeholder="Company Code">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputUsername1">Timekeeping Start Basis</label>
+                      <ng-select [items]="tkBasis" name="Country" bindLabel="description" bindValue="id"
+                      placeholder="Select Basis" formControlName="tk_gen_ref">
+                    </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputUsername1"></label>
+                      <div class="custom-control custom-switch">
+                        <input formControlName="is_email" type="checkbox" class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label" for="customSwitch1">Enable Notification?</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="card-title">
+                  <h6>Address</h6>
+                </div>
+                <div class="row">
+                  <div class="col-sm-1">
+                    <div class="form-group">
+                      <label class="control-label">Zip Code</label>
+                      <input type="text" formControlName="zipCode" class="form-control" placeholder="Zip Code">
+                      <p class="text-danger mt-1" *ngIf="errZipCode">Zip Code is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <label class="control-label">Unit/Flr #</label>
+                      <input type="text" formControlName="unit" class="form-control" placeholder="Unit/Flr #">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Building</label>
+                      <input type="text" formControlName="building" class="form-control" placeholder="Unit/Flr #">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Street</label>
+                      <input type="text" formControlName="street" class="form-control" placeholder="Enter zip code">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Barangay</label>
+                      <input type="text" formControlName="barangay" class="form-control" placeholder="Barangay">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Region</label>
+                      <ng-select [items]="region" name="Country" bindLabel="description" bindValue="id"
+                        placeholder="Select Country" formControlName="selectedRegion" (change)="selectRegion()">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errRegion">Region is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Province</label>
+                      <ng-select [items]="province" name="Province" bindLabel="description" bindValue="id"
+                        placeholder="Select Province" formControlName="province">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errProvince">Province is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">City</label>
+                      <ng-select [items]="companyCity" name="Country" bindLabel="to_description" bindValue="to_id"
+                        placeholder="Select Country" formControlName="selectedCity">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errCity">City is needed!</p>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="control-label">Country</label>
+                      <ng-select [items]="country" name="Country" bindLabel="description" bindValue="id"
+                        placeholder="Select Country" formControlName="selectedCompanyCountry">
+                      </ng-select>
+                      <p class="text-danger mt-1" *ngIf="errCountry">Country is needed!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ul class="nav justify-content-end">
+              <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Update Company
+              </button>
+              <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+                          html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+                          showCloseButton: true,
+                          showCancelButton: true,
+                          focusConfirm: false,
+                          confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+                          confirmButtonAriaLabel: 'Thumbs up, great!',
+                          cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+                          cancelButtonAriaLabel: 'Thumbs down'
+                        }" class="btn btn-primary">
+              </button>
+            </ul>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

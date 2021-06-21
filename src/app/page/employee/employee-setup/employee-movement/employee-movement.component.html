@@ -1,0 +1,101 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Employee Setup</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Employee Movement</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-md-12">
+                <h6>Employee Movement</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Employee</label>
+                <ng-select [items]="employee" name="Employee" bindLabel="display_name" bindValue="encrypt_employee_id"
+                  placeholder="Select Employee" [(ngModel)]="selectedEmployee">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="control-label">Movement</label>
+                <ng-select [items]="movement" name="Movement" bindLabel="description" bindValue="id"
+                  placeholder="Select Movement" [(ngModel)]="selectedMovement">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Date From</label>
+                <input [(ngModel)]="dateFrom" (change)="dateChange()" class="form-control" placeholder="mm/dd/yyyy"
+                  name="dp" (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Date To</label>
+                <input [(ngModel)]="dateTo" (change)="dateChange()" class="form-control" placeholder="mm/dd/yyyy"
+                  name="dp" (click)="d2.toggle()" ngbDatepicker #d2="ngbDatepicker">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="nav justify-content-end">
+                <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Loading...
+                </button>
+                <button class="btn btn-primary btn-icon-text" *ngIf="!isSearch" (click)="search()">
+                  <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i> Search
+                </button>
+              </ul>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+                  <thead>
+                    <tr>
+                      <th>Employee Code</th>
+                      <th>Employee</th>
+                      <th>Movement Type</th>
+                      <th>Description</th>
+                      <th>Date Created</th>
+                      <th>Created By</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let x of table; let i = index">
+                      <td>{{x.employeeCode}}</td>
+                      <td>{{x.displayName}}</td>
+                      <td>{{x.movementType}}</td>
+                      <td>{{x.description}}</td>
+                      <td>{{x.dateCreated}}</td>
+                      <td>{{x.createdBy}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

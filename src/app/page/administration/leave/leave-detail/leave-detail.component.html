@@ -1,0 +1,176 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Company Setup</a></li>
+      <li class="breadcrumb-item"><a routerLink="/layout/administration/leave-view">Leave</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="leaveForm">
+            <h6 class="card-title">Leave</h6>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">Leave Name</label>
+                  <input type="text" formControlName="leaveName" class="form-control" placeholder="Leave Name">
+                  <p class="text-danger mt-1" *ngIf="errLeaveName">Leave Name is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">Description</label>
+                  <input type="text" formControlName="description" class="form-control" placeholder="Description">
+                  <p class="text-danger mt-1" *ngIf="errDescription">Description is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Gender to use this leave?</label>
+                  <ng-select [items]="gender" bindLabel="description" bindValue="id" placeholder="Select Gender"
+                    formControlName="selectedGender">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errGender">Gender is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Require Attachment?</label>
+                  <ng-select [items]="attachment" bindLabel="description" bindValue="id" placeholder="Select Attachment"
+                    formControlName="selectedAttachment">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errAttachment">Is require attachment is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Filed By?</label>
+                  <ng-select [items]="filedBy" bindLabel="description" bindValue="id" placeholder="Select Filed By"
+                    formControlName="selectedFiledBy">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errFiledBy">Is filed by is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Leave Start</label>
+                  <ng-select [items]="leavestart" bindLabel="description" bindValue="id" placeholder="Select Filed By"
+                    formControlName="selectedLeaveStart">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errLeaveStart">Leave start is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Total Leaves</label>
+                  <input type="number" formControlName="totalLeaves" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errTotalLeave">Total leave is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Leave Accrued</label>
+                  <ng-select [items]="leaveType" bindLabel="description" bindValue="id" placeholder="Select Attachment"
+                    formControlName="selectedAccrued">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errLeaveAccrued">Leave accrued is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Accrued Credits</label>
+                  <input type="number" formControlName="accruedCredits" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errAccruedCredits">Accrued credit is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Leave Per Month</label>
+                  <input type="number" formControlName="leavePerMonth" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errLeavePerMonth">Leave per month is needed!</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Credits Convertible to Cash</label>
+                  <input type="number" formControlName="convertibleToCash" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errCreditsConvertible">Credits convertible is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Taxable Credits</label>
+                  <input type="number" formControlName="taxableCredits" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errTaxableCredits">Taxable credits is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Non-Taxable Credits</label>
+                  <input type="number" formControlName="nonTaxableCredits" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errNonTaxableCredits">Non-Taxable credits is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Priority To Convert</label>
+                  <ng-select [items]="priority" bindLabel="description" bindValue="id" placeholder="Select Filed By"
+                    formControlName="selectedPriority">
+                  </ng-select>
+                  <p class="text-danger mt-1" *ngIf="errPriorityConvert">Priority to convert is needed!</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Leave Before</label>
+                  <input type="number" formControlName="leaveBefore" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errLeaveBefore">Leave Before is needed!</p>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">LeaveAfter</label>
+                  <input type="number" formControlName="leaveAfter" class="form-control" placeholder="0">
+                  <p class="text-danger mt-1" *ngIf="errLeaveAfter">Leave After is needed!</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <ul class="nav justify-content-end">
+            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+              <i data-feather="save" appFeatherIcon class="btn-icon-prepend"></i> Save Changes
+            </button>
+            <button hidden [swal]="{title: '<strong>HTML <u>example</u></strong>', icon: 'info',
+              html: '(You can use <b>bold text</b>, <a href=\'http:\/\/github.com\'>links</a> and other HTML tags)',
+              showCloseButton: true,
+              showCancelButton: true,
+              focusConfirm: false,
+              confirmButtonText:'<i class=\'feather icon-thumbs-up\'></i> Great!',
+              confirmButtonAriaLabel: 'Thumbs up, great!',
+              cancelButtonText: '<i class=\'feather icon-thumbs-down\'></i>',
+              cancelButtonAriaLabel: 'Thumbs down'
+            }" class="btn btn-primary">
+            </button>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

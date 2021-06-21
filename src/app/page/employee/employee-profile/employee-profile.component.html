@@ -1,0 +1,765 @@
+<div *ngIf="isLoading" class="spinner-wrapper">
+  <div class="spinner">Loading...</div>
+</div>
+<div class="animate__animated animate__fadeInUp" *ngIf="!isLoading">
+  <div class="profile-page tx-13">
+    <div class="row">
+      <div class="col-12 grid-margin">
+        <div class="profile-header">
+          <div class="cover">
+            <div class="gray-shade"></div>
+            <figure>
+              <img src="https://via.placeholder.com/1148x150/727cf5/" class="img-fluid" alt="profile cover">
+            </figure>
+            <div class="cover-body d-flex justify-content-between align-items-center">
+              <div>
+                <img class="profile-pic" width="100" height="100" [src]="img_path" src="{{ img_path }}" alt="profile">
+                <span class="profile-name">{{ display_name }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="header-links">
+            <form [formGroup]="employeeForm">
+              <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId"
+                class="links d-flex align-items-center mt-3 mt-md-0">
+
+                <li [ngbNavItem]="1" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="user" appFeatherIcon></i> Personal Information</a>
+                  <ng-template ngbNavContent>
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Personal Information</h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Salutation</label>
+                            <input type="text" formControlName="selectedSalutation" class="form-control"
+                              placeholder="Salutation">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Display Name</label>
+                            <input type="text" formControlName="displayName" class="form-control"
+                              placeholder="Display Name">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" formControlName="firstName" class="form-control"
+                              placeholder="First Name">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Middle Name</label>
+                            <input type="text" formControlName="middleName" class="form-control"
+                              placeholder="Middle Name">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" formControlName="lastName" class="form-control" placeholder="Last Name">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Suffix</label>
+                            <input type="text" formControlName="selectedSuffix" class="form-control"
+                              placeholder="Suffix">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Nickname</label>
+                            <input type="text" formControlName="nickname" class="form-control" placeholder="Nickname">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Gender</label>
+                            <input type="text" formControlName="selectedGender" class="form-control"
+                              placeholder="Gender">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Nationality</label>
+                            <input type="text" formControlName="selectedNationality" class="form-control"
+                              placeholder="Nationality">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Birthday</label>
+                            <input type="text" formControlName="selectedDate" class="form-control"
+                              placeholder="Birthday">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Birthplace</label>
+                            <input formControlName="birthplace" type="text" class="form-control"
+                              placeholder="Birthplace">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Civil Status</label>
+                            <input type="text" formControlName="selectedCivilStatus" class="form-control"
+                              placeholder="Civil Status">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Height (CM)</label>
+                            <input type="number" formControlName="height" class="form-control" placeholder="Height">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Weight (KGS)</label>
+                            <input type="number" formControlName="weight" class="form-control" placeholder="Weight">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Blood Type</label>
+                            <input type="text" formControlName="selectedBloodType" class="form-control"
+                              placeholder="Blood Type">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Religion</label>
+                            <input type="text" formControlName="selectedReligion" class="form-control"
+                              placeholder="Religion">
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Contact Information</h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Mobile</label>
+                            <input type="text" formControlName="mobile" class="form-control" placeholder="Mobile">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Phone</label>
+                            <input type="text" formControlName="phone" class="form-control" placeholder="Phone">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Office</label>
+                            <input type="text" formControlName="office" class="form-control" placeholder="Office">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Personal Email</label>
+                            <input type="text" formControlName="personalemail" class="form-control"
+                              placeholder="Personal Email">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Company Email</label>
+                            <input type="text" formControlName="companyemail" class="form-control" placeholder="Email">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Alternate Number</label>
+                            <input type="text" formControlName="alternatenumber" class="form-control"
+                              placeholder="Alternate Number">
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Present Address</h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-2">
+                          <div class="form-group">
+                            <label class="control-label">Zip Code</label>
+                            <input type="text" formControlName="presentZipCode" class="form-control" placeholder="Zip Code">                            
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-1">
+                          <div class="form-group">
+                            <label class="control-label">Unit/Flr#</label>
+                            <input type="text" formControlName="presentUnit" class="form-control" placeholder="Unit/Flr #">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Building</label>
+                            <input type="text" formControlName="presentBuilding" class="form-control" placeholder="Building">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Street</label>
+                            <input type="text" formControlName="presentStreet" class="form-control" placeholder="Street">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Barangay</label>
+                            <input type="text" formControlName="presentBarangay" class="form-control" placeholder="Barangay">
+                          </div>
+                        </div><!-- Col -->
+                      </div><!-- Row -->
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Region</label>
+                            <input type="text" formControlName="presentRegion" class="form-control" placeholder="Region">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Province</label>
+                            <input type="text" formControlName="presentProvince" class="form-control" placeholder="Province">
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">City</label>
+                            <input type="text" formControlName="presentCity" class="form-control" placeholder="City">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <input type="text" formControlName="presentCountry" class="form-control" placeholder="Country">
+                          </div>
+                        </div><!-- Col -->
+                      </div>
+
+                      <hr>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Permanent Address</h6>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-2">
+                          <div class="form-group">
+                            <label class="control-label">Zip Code</label>
+                            <input type="text" formControlName="permanentZipCode" class="form-control" placeholder="Zip Code">                            
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-1">
+                          <div class="form-group">
+                            <label class="control-label">Unit/Flr#</label>
+                            <input type="text" formControlName="permanentUnit" class="form-control" placeholder="Unit/Flr #">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Building</label>
+                            <input type="text" formControlName="permanentBuilding" class="form-control" placeholder="Building">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Street</label>
+                            <input type="text" formControlName="permanentStreet" class="form-control" placeholder="Street">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Barangay</label>
+                            <input type="text" formControlName="permanentBarangay" class="form-control" placeholder="Barangay">
+                          </div>
+                        </div><!-- Col -->
+                      </div><!-- Row -->
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Region</label>
+                            <input type="text" formControlName="permanentRegion" class="form-control" placeholder="Region">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Province</label>
+                            <input type="text" formControlName="permanentProvince" class="form-control" placeholder="Province">
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">City</label>
+                            <input type="text" formControlName="permanentCity" class="form-control" placeholder="City">
+                          </div>
+                        </div><!-- Col -->
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <input type="text" formControlName="permanentCountry" class="form-control" placeholder="Country">
+                          </div>
+                        </div><!-- Col -->
+                      </div>
+                      <!-- <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Present Address</label>
+                            <textarea class="form-control" formControlName="presentaddress" rows="5"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Permanent Address</label>
+                            <textarea class="form-control" formControlName="permamentaddress" rows="5"></textarea>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="columns" appFeatherIcon></i> Work Information</a>
+                  <ng-template ngbNavContent>
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Work Information</h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Biometrics ID</label>
+                            <input formControlName="biometricsID" type="text" class="form-control"
+                              placeholder="Biometrics ID">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Employee ID</label>
+                            <input formControlName="employeeID" type="text" class="form-control"
+                              placeholder="Employee ID">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Branch</label>
+                            <input formControlName="selectedBranch" type="text" class="form-control"
+                              placeholder="Branch">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Employee Status</label>
+                            <input formControlName="selectedEmployeeStatus" type="text" class="form-control"
+                              placeholder="Employee Status">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Occupation</label>
+                            <input formControlName="selectedOccupation" type="text" class="form-control"
+                              placeholder="Occupation">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Supervisor</label>
+                            <input formControlName="selectedSupervisor" type="text" class="form-control"
+                              placeholder="Supervisor">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Department</label>
+                            <input formControlName="selectedDepartment" type="text" class="form-control"
+                              placeholder="Department">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Date Hired</label>
+                            <input formControlName="dateHired" type="text" class="form-control"
+                              placeholder="Date Hired">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Regularization Date</label>
+                            <input formControlName="regularizationDate" type="text" class="form-control"
+                              placeholder="Regularization Date">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Payroll Information</h6>
+                        </div>
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Payroll Type</label>
+                            <input formControlName="selectedPayrollType" type="text" class="form-control"
+                              placeholder="Payroll Type">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Monthly Rate</label>
+                            <input type="text" formControlName="monthlyRate" class="form-control"
+                              placeholder="Monthly Rate">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Semi Monthly Rate</label>
+                            <input type="text" formControlName="semiMonthlyRate" class="form-control"
+                              placeholder="Semi Monthly Rate">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Factor Rate</label>
+                            <input type="text" formControlName="factorRate" class="form-control"
+                              placeholder="Factor Rate">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Daily Rate</label>
+                            <input type="text" formControlName="dailyRate" class="form-control"
+                              placeholder="Daily Rate">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Hourly Rate</label>
+                            <input type="text" formControlName="hourlyRate" class="form-control"
+                              placeholder="Hourly Rate">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>SSS #</label>
+                            <input type="text" formControlName="sssNumber" class="form-control" placeholder="SSS">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Pagibig #</label>
+                            <input type="text" formControlName="pagibigNumber" class="form-control"
+                              placeholder="Pagibig">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Bank</label>
+                            <input type="text" formControlName="selectedBank" class="form-control" placeholder="Bank">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Philhealth #</label>
+                            <input type="text" formControlName="philhealthNumber" class="form-control"
+                              placeholder="Philhealth">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>TIN #</label>
+                            <input type="text" formControlName="tinNumber" class="form-control" placeholder="TIN">
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label>Bank Account</label>
+                            <input type="text" formControlName="bankAccount" class="form-control"
+                              placeholder="Bank Account">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="3" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="book-open" appFeatherIcon></i> User Credential</a>
+                  <ng-template ngbNavContent>
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>User Credential</h6>
+                        </div>
+                        <div class="col-md-6">
+                          <ul class="nav justify-content-end">
+                            <button class="btn btn-primary btn-icon-text" (click)="submit()">
+                              <i data-feather="edit" appFeatherIcon class="btn-icon-prepend"></i> Save
+                            </button>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" formControlName="userName" class="form-control" placeholder="Username">
+                            <p class="text-danger mt-1" *ngIf="errUsername">Username is needed!</p>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-group">
+                              <input type="{{type}}" formControlName="userHash" class="form-control"
+                                placeholder="Password">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-light btn-icon calendar" type="button"
+                                  (click)="toggle()">
+                                  <i data-feather="eye" appFeatherIcon class="text-secondary"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <p class="text-danger mt-1" *ngIf="errPassword">Password is needed!</p>
+                            <p class="text-danger mt-1">{{strError}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="4" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="shuffle" appFeatherIcon></i> Addition and Deduction</a>
+                  <ng-template ngbNavContent>
+                    <div class="card">
+                      <div class="card-header">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6>Addition and Deduction</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Adjustment</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Timing</th>
+                                <th>Taxable</th>
+                                <th>Active</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let x of adjList; let i = index">
+                                <td>{{x.recurring_name}}</td>
+                                <td>{{x.adjustment_type}}</td>
+                                <td>{{x.amount}}</td>
+                                <td>{{x.timing}}</td>
+                                <td>{{x.taxable}}</td>
+                                <td>{{x.status}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="5" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="clock" appFeatherIcon></i> Shift</a>
+                  <ng-template ngbNavContent>
+                    <div class="card">
+                      <div class="card-header">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6>Shift</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label class="control-label">Date From</label>
+                              <div class="input-group">
+                                <input class="form-control" placeholder="mm/dd/yyyy" name="dp"
+                                  formControlName="dateFrom" value="dateFrom" (click)="df.toggle()" ngbDatepicker
+                                  #df="ngbDatepicker">
+                                <div class="input-group-append">
+                                  <button class="btn btn-outline-light btn-icon calendar" type="button"
+                                    (click)="df.toggle()">
+                                    <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label class="control-label">Date To</label>
+                              <div class="input-group">
+                                <input class="form-control" placeholder="mm/dd/yyyy" name="dp" formControlName="dateTo"
+                                  (click)="dt.toggle()" ngbDatepicker #dt="ngbDatepicker">
+                                <div class="input-group-append">
+                                  <button class="btn btn-outline-light btn-icon calendar" type="button"
+                                    (click)="dt.toggle()">
+                                    <i data-feather="calendar" appFeatherIcon class="text-secondary"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label class="control-label">&nbsp;</label>
+                              <div class="input-group">
+                                <button class="btn btn-primary" *ngIf="isSearch" type="button" disabled>
+                                  <span class="spinner-border spinner-border-sm" role="status"
+                                    aria-hidden="true"></span>
+                                  Loading...
+                                </button>
+                                <button type="button" *ngIf="!isSearch" class="btn btn-primary btn-icon-text"
+                                  (click)="search()">
+                                  <i data-feather="search" appFeatherIcon class="btn-icon-prepend"></i>
+                                  Search
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="table-responsive">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Shift Name</th>
+                                    <th>Date</th>
+                                    <th>Schedule In</th>
+                                    <th>Schedule Out</th>
+                                    <th>Working Hours</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of scheduleList; let i = index">
+                                    <td>{{x.shift_name}}</td>
+                                    <td>{{x.date | date: 'MM/dd/yyyy'}}</td>
+                                    <td>{{x.time_in}}</td>
+                                    <td>{{x.time_out}}</td>
+                                    <td>{{x.total_working_hours}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="6" class="header-link-item d-flex align-items-center">
+                  <a ngbNavLink class="pt-1px d-none d-md-block">
+                    <i class="mr-1 icon-md" data-feather="anchor" appFeatherIcon></i> Leave</a>
+                  <ng-template ngbNavContent>
+                    <div class="card">
+                      <div class="card-header">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <h6>Leave</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Leave Type</th>
+                                <th>Total Leave</th>
+                                <th>Leave Used</th>
+                                <th>Total Balance</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let x of leaveList; let i = index">
+                                <td>{{x.leave_name}}</td>
+                                <td>{{x.leave_total}}</td>
+                                <td>{{x.leave_used}}</td>
+                                <td>{{x.leave_balance}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </li>
+              </ul>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row profile-body">
+      <div class="d-none d-md-block col-md-12 col-xl-12">
+        <div class="card rounded">
+          <div [ngbNavOutlet]="defaultNav" class="mt-3"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
